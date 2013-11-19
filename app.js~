@@ -1,0 +1,19 @@
+var express = require('express'),
+    users = require('./routes/users');
+
+var app = express();
+
+app.configure(function () {
+	app.use(express.logger('dev'));
+	app.use(express.bodyParser());
+});
+
+app.get('/users', users.findAll);
+app.get('/users/:id', users.findById);
+app.post('/users', users.addUser);
+app.put('/users/:id', users.updateUser);
+app.delete('/users/:id', users.deleteUser);
+
+// Start
+app.listen(3000);
+console.log('API: INIT [OK]');

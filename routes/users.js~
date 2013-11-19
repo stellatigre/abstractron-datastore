@@ -1,0 +1,8 @@
+exports.findAll = function (req, res) {
+	res.send([{ username: 'user1' }, { username: 'user2' }, { username: 'user3' }]);
+};
+
+exports.findById = function (req, res) {
+	res.send({ id: req.params.id, username: 'specificuser', description: 'Specific User' });
+};
+
