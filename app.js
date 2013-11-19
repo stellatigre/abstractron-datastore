@@ -1,7 +1,8 @@
 var express = require('express'),
     users = require('./routes/users'),
 	images = require('./routes/images'),
-	levels = require('./routes/levels');
+	levels = require('./routes/levels'),
+	blocks = require('./routes/blocks');
 
 var app = express();
 
@@ -10,6 +11,7 @@ app.configure(function () {
 	app.use(express.bodyParser());
 });
 
+app.get('/users/login/:username', users.findUsername);
 app.get('/users', users.findAll);
 app.get('/users/:id', users.findById);
 app.post('/users', users.addUser);
@@ -27,6 +29,13 @@ app.get('/levels/:id', levels.findById);
 app.post('/levels', levels.addLevel);
 app.put('/levels/:id', levels.updateLevel);
 app.delete('/levels/:id', levels.deleteLevel);
+
+app.get('/user/:id/blocks', blocks.findByUserId);
+app.get('/blocks', blocks.findAll);
+app.get('/blocks/:id', blocks.findById);
+app.post('/blocks', blocks.addBlock);
+app.put('/blocks/:id', blocks.updateBlock);
+app.delete('/blocks/:id', blocks.deleteBlock);
 
 // Start
 app.listen(3002);
