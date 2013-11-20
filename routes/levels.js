@@ -19,6 +19,16 @@ db.open(function (err, db) {
 	}
 });
 
+exports.findByUserId = function (req, res) {
+	var userid = req.params.id;
+	console.log('Retrieving levels for user id: ' + userid);
+	db.collection('levels', function (err, collection) {
+		collection.find().toArray(function (err, items) {
+			res.send(items);
+		});
+	});
+};
+
 exports.findAll = function (req, res) {
 	db.collection('levels', function (err, collection) {
 		collection.find().toArray(function (err, items) {
