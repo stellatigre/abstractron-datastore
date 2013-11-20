@@ -1,10 +1,11 @@
 /* DEPENDENCIES */
-var express  	= require('express'),	// express
-	// mongoose 	= require('mongoose'),	// mongoose
-	// Schema  	= mongoose.Schema,
+var flash 		= require('connect-flash'),	// flash
+	express  	= require('express'),	// express
+	mongo		= require('mongodb'),
+	mongoose 	= require('mongoose'),	// mongoose
+	Schema  	= mongoose.Schema,
 	passport	= require('passport'),	// passport
 	LocalStrategy = require('passport-local').Strategy,
-	flash 		= require('connect-flash'),	// flash
 	
 	app      	= express(),	
 	
@@ -12,38 +13,74 @@ var express  	= require('express'),	// express
     users = require('./routes/users'),
 	images = require('./routes/images'),
 	levels = require('./routes/levels'),
-	blocks = require('./routes/blocks');
+	blocks = require('./routes/blocks'),
+	login  = require('./routes/login');	
 
 // Test user records
 var userList = [
-	{ id: 1, username: 'bob', password: 'secret', email: 'bob@example.com' },
-	{ id: 2, username: 'joe', password: 'birthday', email: 'joe@example.com' }
+	{ _id: 1, username: 'bob', password: 'secret', email: 'bob@example.com' },
+	{ _id: 2, username: 'joe', password: 'birthday', email: 'joe@example.com' },
+	{ _id: 3, username: 'chris', password: 'chris', email: 'chris@abstractron.com' }
 ];	
 
 // User methods
 function findUserById(id, fn) {
-	var idx = id - 1;
-	if (userList[idx]) {
-		fn(null, userList[idx]);
-	} else {
-		fn(new Error('User ' + id + ' does not exist'));
-	}
+	var Server = mongo.Server,
+    Db = mongo.Db,
+    BSON = mongo.BSONPure;
+
+	var server = new Server('localhost', 27017, {auto_reconnect: true});
+	db = new Db('abstractapi', server);
+	
+	db.open(function (err, db) {
+		if (err) {
+			//sys.puts(err);
+		} else {
+			db.collection('users', function (err, collection) {
+				collection.findOne({_id: id }, function (err, item) {
+					console.log('FindById: ' + item);
+					return fn(null, item);
+				});
+			});
+		}
+	});	
+	
+	fn(new Error('User ' + id + ' does not exist'));
 }
 
 function findUserByUsername(username, fn) {
-	for (var i = 0, len = userList.length; i < len; i++) {
-		var user = userList[i];
-		if (user.username === username) {
-			return fn(null, user);
-		}
-	}
 	
-	return fn(null, null);
+	// Return joe only
+	//var user = userList[1];
+	//return fn(null, user);
+	
+	var Server = mongo.Server,
+    Db = mongo.Db,
+    BSON = mongo.BSONPure;
+
+	var server = new Server('localhost', 27017, {auto_reconnect: true});
+	db = new Db('abstractapi', server);
+	
+	db.open(function (err, db) {
+		if (err) {
+			//sys.puts(err);
+		} else {
+			db.collection('users', function (err, collection) {
+				collection.findOne({username: username }, function (err, item) {
+					console.log('FindByUsername: ' + item);
+					return fn(null, item);
+				});
+			});
+		}
+	});	
+	
+	// Bad login (crashes)
+	//return fn(null, null);
 }
 
 /* PASSPORT USER SERIALIZATION */
 passport.serializeUser(function(user, done) {
-	done(null, user.id);
+	done(null, user._id);
 });
 
 passport.deserializeUser(function(id, done) {
@@ -55,15 +92,22 @@ passport.deserializeUser(function(id, done) {
 /* PASSPORT - LOCAL STRATEGY */
 passport.use(new LocalStrategy(
 	function(username, password, done) {
+		console.log("LOGIN CHECK: user " + username + " pass " + password);
 		process.nextTick(function() {
 			
 			// Find user by username. If none found, or password
 			// is incorrect, set user to false to indicate failure and
 			// send flash message. Otherwise, return to authed 'user'.
 			findUserByUsername(username, function(err, user) {
-				if (err) { return done(err); }
-				if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
-				if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
+				if (err) { 
+					return done(err); 
+				}
+				if (!user) { 
+					return done(null, false, { message: 'Invalid user' }); 
+				}
+				if (user.password != password) {
+					return done(null, false, { message: 'Invalid password' }); 
+				}
 				
 				return done(null, user);
 			});
@@ -84,7 +128,7 @@ app.configure(function () {
 	app.use(express.logger());
 	app.use(express.cookieParser('abstractsecret'));
 	app.use(express.bodyParser());
-	app.use(express.session({ cookie: { maxAge: 60000 }}));
+	//app.use(express.session({ cookie: { maxAge: 60000 }}));
 	app.use(flash());
 	// Initialize passport and use sessions
 	app.use(passport.initialize());
@@ -95,11 +139,13 @@ app.configure(function () {
 /* ROUTES */
 
 // /login
-app.post('/login', 
-	passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
-	function(req, res) {
-		res.redirect('/');
-});
+
+app.post('/login',
+		passport.authenticate('local'),
+		function (req, res) {
+			res.json({ login: 'ok' });
+		}
+);
 
 // /logout
 /*
@@ -108,6 +154,9 @@ app.get('/logout', function(req, res) {
 	res.redirect('/');
 });
 */
+
+app.post('/authfail', login.loginFailed);
+app.post('/authok', login.loggedIn);
 
 // /users
 app.get('/users/login/:username', users.findUsername);

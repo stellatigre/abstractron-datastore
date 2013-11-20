@@ -19,6 +19,15 @@ db.open(function (err, db) {
 	}
 });
 
+exports.loginUserCheck = function (req, res) {
+	
+	db.collection('users', function (err, collection) {
+		collection.findOne({'username': username }, function (err, item) {
+			res.send(item);
+		});
+	});
+};
+
 exports.findUsername = function (req, res) {
 	var username = req.params.username;
 	
