@@ -7,7 +7,7 @@ var conf = require('./testConfig.json');  	// same directory plz
 
 var req = request.newClient(conf.host)
  
-describe('GET /blocks - ' , function () {
+describe('GET /levels - ' , function () {
 		
 	var responseData = [];
 	var fields = ['_id', 'name', 'url' , 'userid']
@@ -19,21 +19,32 @@ describe('GET /blocks - ' , function () {
 		});
 	});
 
-	it('has 3 fields per entry : _id, url, userid, name', function (done) {
+	it('has 3 fields per entry : _id, name, rooms', function (done) {
 		async.forEach(responseData, function (item) {
-			aync.forEach(fields, function (field) {
+			aync.eachSeries(fields, function (field) {
 				assert.isDefined(item[field]);
 			});
 		});
 		done();
 	});
 
-	it('has all fields as Strings', function (done) {
+	it('has all _id & name values as Strings', function (done) {
+		async.eachSeries(responseData, function (item) {
+				assert.isString(item['_id']);
+				assert.isString(item['name']);
+			});
+		done();
+	});
+
+	it('rooms is an array, each entry in rooms has a blocks array', function (done) {
+	
 		async.forEach(responseData, function (item) {
-			async.eachSeries(fields, function (field) {
-				assert.isString(item[field]);
+			async.eachSeries(item['rooms'], function(room) {
+				assert.isArray(room);
+				assert.isArray(room['blocks']);
 			});
 		});
+		
 		done();
 	});
 });	
