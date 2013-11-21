@@ -7,9 +7,10 @@ var conf = require('./testConfig.json');  	// same directory plz
 
 var req = request.newClient(conf.host)
  
-describe('GET /users - ' , function () {
+describe('GET /blocks - ' , function () {
 		
 	var responseData = [];
+	var fields = ['_id', 'name', 'url' , 'userid']
 
 	before( function getData() {						// get response once
 		req.get('/users', function (err, res, body){
@@ -18,20 +19,20 @@ describe('GET /users - ' , function () {
 		});
 	});
 
-	it('has 3 fields per entry : _id, email, username', function (done) {
+	it('has 3 fields per entry : _id, url, userid, name', function (done) {
 		async.forEach(responseData, function (item) {
-			assert.isDefined(item['_id']);
-			assert.isDefined(item['email']);
-			assert.isDefined(item['username']);
+			aync.forEach(fields, function (field) {
+				assert.isDefined(item[field]);
+			});
 		});
 		done();
 	});
 
 	it('has all fields as Strings', function (done) {
 		async.forEach(responseData, function (item) {
-			assert.isString(item['_id']);
-			assert.isString(item['email']);
-			assert.isString(item['username']);
+			aync.forEach(fields, function (field) {
+				assert.isString(item[field]);
+			});
 		});
 		done();
 	});
