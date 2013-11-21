@@ -30,7 +30,7 @@ describe('GET /blocks - ' , function () {
 
 	it('has all fields as Strings', function (done) {
 		async.forEach(responseData, function (item) {
-			aync.forEach(fields, function (field) {
+			async.forEach(fields, function (field) {
 				assert.isString(item[field]);
 			});
 		});
