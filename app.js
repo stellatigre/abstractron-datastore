@@ -14,7 +14,8 @@ var flash 		= require('connect-flash'),	// flash
 	images = require('./routes/images'),
 	levels = require('./routes/levels'),
 	blocks = require('./routes/blocks'),
-	login  = require('./routes/login');	
+	login  = require('./routes/login'),
+	register = require('./routes/register');
 
 // Test user records
 var userList = [
@@ -143,7 +144,8 @@ app.configure(function () {
 app.post('/login',
 		passport.authenticate('local'),
 		function (req, res) {
-			res.json({ login: 'ok' });
+			// If this is called, authentication was successful.
+			res.json({"_id":req.user._id});
 		}
 );
 
@@ -174,7 +176,7 @@ app.put('/images/:id', images.updateImage);
 app.delete('/images/:id', images.deleteImage);
 
 // /levels
-app.get('/user/:id/levels', levels.findByUserId);
+app.get('/user/:userid/levels', levels.findByUserId);
 app.get('/levels', levels.findAll);
 app.get('/levels/:id', levels.findById);
 app.post('/levels', levels.addLevel);
@@ -182,7 +184,7 @@ app.put('/levels/:id', levels.updateLevel);
 app.delete('/levels/:id', levels.deleteLevel);
 
 // /blocks
-app.get('/user/:id/blocks', blocks.findByUserId);
+app.get('/user/:userid/blocks', blocks.findByUserId);
 app.get('/blocks', blocks.findAll);
 app.get('/blocks/:id', blocks.findById);
 app.post('/blocks', blocks.addBlock);

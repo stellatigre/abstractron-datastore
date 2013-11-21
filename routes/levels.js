@@ -9,21 +9,31 @@ db = new Db('abstractapi', server);
 
 db.open(function (err, db) {
 	if (!err) {
-		console.log('Connected to levels.');
+		db.collection('users', { strict: true }, function (err, collection) {
+			if (err) {
+				console.log('Levels collection does not exist, creating from sample data.');
+				populateDB();
+			}
+		});
 		db.collection('levels', { strict: true }, function (err, collection) {
 			if (err) {
 				console.log('Levels collection does not exist, creating from sample data.');
 				populateDB();
 			}
 		});
+		console.log('levels: Connection opened (users, levels).');
 	}
 });
 
+// NOTE: This is just returning all records for now, when none contain
+//  	 a userid property.
 exports.findByUserId = function (req, res) {
-	var userid = req.params.id;
-	console.log('Retrieving levels for user id: ' + userid);
+	var userid = req.params.userid;
+	
+	console.log('Retrieving levels for user: ' + userid);
 	db.collection('levels', function (err, collection) {
-		collection.find().toArray(function (err, items) {
+		collection.find(/*{"userid":userid}*/).toArray(function (err, items) {
+			console.log('Found ' + items.length + ' level(s) for user ' + userid);
 			res.send(items);
 		});
 	});

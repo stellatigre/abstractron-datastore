@@ -14,14 +14,8 @@ db.open(function (err, db) {
 			
 			}
 		});
-		console.log('login: Connection opened (users).');
+		console.log('register: Connection opened (users).');
 	}
 });
 
-exports.loggedIn = function (req, res) {
-	res.json({ login: 'ok' });
-};
-
-exports.loginFailed = function (req, res) {
-	res.json({ login: 'fail' });
-};
+// No routes needed yet.

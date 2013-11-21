@@ -9,13 +9,13 @@ db = new Db('abstractapi', server);
 
 db.open(function (err, db) {
 	if (!err) {
-		console.log('Connected to images.');
 		db.collection('images', { strict: true }, function (err, collection) {
 			if (err) {
 				console.log('Images collection does not exist, creating from sample data.');
 				populateDB();
 			}
 		});
+		console.log('images: Connection opened (images).');
 	}
 });
 

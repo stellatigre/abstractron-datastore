@@ -9,21 +9,23 @@ db = new Db('abstractapi', server);
 
 db.open(function (err, db) {
 	if (!err) {
-		console.log('Connected to blocks.');
 		db.collection('blocks', { strict: true }, function (err, collection) {
 			if (err) {
 				console.log('Blocks collection does not exist, creating from sample data.');
 				populateDB();
 			}
 		});
+		console.log('users: Connection opened (blocks).');
 	}
 });
 
+// NOTE: Levels by userid may not work yet, but blocks are fine.
 exports.findByUserId = function (req, res) {
-	var id = req.params.id;
-	console.log('Retrieving blocks for user: ' + id);
+	var userid = req.params.userid;
+	console.log('Retrieving blocks for user: ' + userid);
 	db.collection('blocks', function (err, collection) {
-		collection.find({'userid':id}).toArray(function (err, items) {
+		collection.find({'userid':userid}).toArray(function (err, items) {
+			console.log('Found ' + items.length + ' block(s) for user ' + userid);
 			res.send(items);
 		});
 	});

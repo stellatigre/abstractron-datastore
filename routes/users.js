@@ -9,13 +9,13 @@ db = new Db('abstractapi', server);
 
 db.open(function (err, db) {
 	if (!err) {
-		console.log('Connected to users.');
 		db.collection('users', { strict: true }, function (err, collection) {
 			if (err) {
 				console.log('Users collection does not exist, creating from sample data.');
 				populateDB();
 			}
 		});
+		console.log('users: Connection opened.');
 	}
 });
 
@@ -33,7 +33,7 @@ exports.findUsername = function (req, res) {
 	
 	db.collection('users', function (err, collection) {
 		collection.findOne({'username': username }, function (err, item) {
-			res.send(item);
+			res.json({"_id":item._id});
 		});
 	});
 };
@@ -60,13 +60,16 @@ exports.addUser = function (req, res) {
 	var user = req.body;
 	console.log('Adding user: ' + JSON.stringify(user));
 	
+	// TODO: Check for existing user
+	
 	db.collection('users', function (err, collection) {
 		collection.insert(user, {safe:true}, function (err, result) {
 			if (err) {
 				res.send({'error':'An error occurred on user insert.'});
 			} else {
 				console.log('Success: ' + JSON.stringify(result[0]));
-				res.send(result[0]);
+				// We only want to return the user id generated.
+				res.json({"_id":result[0]._id});
 			}
 		});
 	});
