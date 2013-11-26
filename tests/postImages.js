@@ -2,7 +2,6 @@ var req = require("request");
 var async = require("async");
 var assert = require("chai").assert;
 
-var AT = require('./lib/testHelpers.js');		// for both of these,
 var conf = require('./lib/testConfig.json');  	// same directory plz
 
 describe ("POST /images - ", function () {
@@ -49,3 +48,5 @@ describe ("POST /images - ", function () {
 	});		
 
 });
+
+
