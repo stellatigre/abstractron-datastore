@@ -5,9 +5,9 @@ var assert = require("chai").assert;
 var AT = require('./lib/testHelpers.js');		// for both of these,
 var conf = require('./lib/testConfig.json');  	// same directory plz
 
-describe ("GET /blocks - ", function () {
+describe ("GET /levels - ", function () {
 
-	var path = '/blocks';
+	var path = '/levels';
 	var responseData;
 
 	var waitForResponseData = function(done) {
@@ -30,20 +30,31 @@ describe ("GET /blocks - ", function () {
 		done();
 	});
 
-	it('each object have 4 fields populated with strings : userid, name, url, _id', function(done) { 
+	it('each object have 2 fields populated with strings : name & _id', function(done) { 
 		
 		async.forEach(responseData, function (item, callback) {		
 			
 			assert.isString(item['_id']);				// verify fields
-			assert.isString(item['name']);
-			assert.isString(item['userid']);
-			assert.isString(item['url']);
+			assert.isString(item['name']);	
 			
 			callback();	
 		},
 			AT.errFunction
 		);
 		done();
-	});		
+	});
 
+
+	it('the field "rooms" is an array, entries in rooms have a blocks array', function (done) {
+	
+		async.forEach(responseData, function (item, callback) {
+
+			assert.isArray(item['rooms'][0]['blocks']);
+			callback();
+		},
+			AT.errFunction
+		);
+		done();
+	});
+		
 });

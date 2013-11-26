@@ -12,7 +12,7 @@ describe ("GET /users - ", function () {
 
 	var waitForResponseData = function(done) {
    		if (responseData !== undefined){ done(); }
-   		else setTimeout( function(){ waitForResponseData(done) }, 42 );
+   		else setTimeout( function(){ waitForResponseData(done) }, 20 );
 	 }
 
 	before( function getData(done) {                        // get response once
