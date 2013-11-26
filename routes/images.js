@@ -7,6 +7,7 @@ var Server = mongo.Server,
 var server = new Server('localhost', 27017, {auto_reconnect: true});
 db = new Db('abstractapi', server);
 
+
 db.open(function (err, db) {
 	if (!err) {
 		db.collection('images', { strict: true }, function (err, collection) {
@@ -37,8 +38,25 @@ exports.findById = function (req, res) {
 	});
 };
 
+function validateImageData(image, res) {
+
+	if(image['name'] || image['url'] == undefined) {
+		res.send({'error':'Image lacks needed input values, please check them'});
+	} 
+	else if(urlRegex.test(image['url']) == false) {
+		res.send({'error':'URL value appears to not be a valid URL.'});
+	}
+}
+
+var urlRegex = new RegExp('https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}');
+
 exports.addImage = function (req, res) {
+
 	var image = req.body;
+	
+	// This section is all input validation
+	validateImageData();
+	
 	console.log('Adding image: ' + JSON.stringify(image));
 	
 	db.collection('images', function (err, collection) {
@@ -57,6 +75,8 @@ exports.updateImage = function (req, res) {
 	var id = req.params.id;
 	var image = req.body;
 	
+	validateImageData();
+
 	console.log('Updating image: ' + id);
 	console.log(JSON.stringify(image));
 	
