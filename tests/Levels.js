@@ -44,12 +44,32 @@ describe ("GET /levels - ", function () {
 		done();
 	});
 
-
 	it('the field "rooms" is an array, entries in rooms have a blocks array', function (done) {
 	
 		async.forEach(responseData, function (item, callback) {
 
 			assert.isArray(item['rooms'][0]['blocks']);
+			callback();
+		},
+			AT.errFunction
+		);
+		done();
+	});
+
+	it('"blocks" == array, each member has x,y,z, type, image numbers', function (done) {
+	
+		var testBlocks = responseData[0]['rooms'][0]['blocks'];		// our blocks array
+
+		assert.isArray(testBlocks);
+
+		async.forEach(testBlocks, function (item, callback) {		
+			
+			assert.isNumber(+item['x']);		// + converts string to numbers	
+			assert.isNumber(+item['y']);			
+			assert.isNumber(+item['z']);		// Verify all these are numbers
+			assert.isNumber(+item['type']);
+			assert.isNumber(+item['image']);
+
 			callback();
 		},
 			AT.errFunction
