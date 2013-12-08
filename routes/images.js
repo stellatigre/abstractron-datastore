@@ -38,22 +38,22 @@ exports.findById = function (req, res) {
 	});
 };
 
-function validateImageData(image, res, validated) {
+function validateImageData(image, res) {
 
 	var urlRegex = new RegExp('https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}');
 
 	if (image) {
-		if((image['name'] || image['url']) == (undefined || "")) {
-			//res.setStatusCode(400);
-			res.send({'error':'Image lacks needed input values, please check them'});
-			return validated = false;
-		} 
-		else if(urlRegex.test(image['url']) == false) {
-			//res.setStatusCode(400);
+		if(urlRegex.test(image['url']) == false) {
+			
 			res.send({'error':'URL value appears to not be a valid URL.'});
 			console.log('\nURL FAIL\n'+image['url']+'\n');
 			return validated = false;
 		}
+		else if(image['name'] == (undefined || "")) {
+			
+			res.send({'error':'Image lacks a name, please add one'});
+			return validated = false;
+		} 
 		else { return validated = true; console.log('\nSWAG\n'); }
 	}
 }
@@ -61,9 +61,9 @@ function validateImageData(image, res, validated) {
 exports.addImage = function (req, res) {
 
 	var image = req.body;
-	var validated = false;
+	var validated = true;
 	
-	validateImageData(image, res, validated);
+	validateImageData(image, res);
 
 	if ( validated == true ) {
 	
