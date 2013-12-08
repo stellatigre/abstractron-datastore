@@ -38,37 +38,48 @@ exports.findById = function (req, res) {
 	});
 };
 
-function validateImageData(image, res) {
+function validateImageData(image, res, validated) {
 
-	if(image['name'] || image['url'] == undefined) {
-		res.send({'error':'Image lacks needed input values, please check them'});
-	} 
-	else if(urlRegex.test(image['url']) == false) {
-		res.send({'error':'URL value appears to not be a valid URL.'});
+	var urlRegex = new RegExp('https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}');
+
+	if (image) {
+		if((image['name'] || image['url']) == (undefined || "")) {
+			//res.setStatusCode(400);
+			res.send({'error':'Image lacks needed input values, please check them'});
+			return validated = false;
+		} 
+		else if(urlRegex.test(image['url']) == false) {
+			//res.setStatusCode(400);
+			res.send({'error':'URL value appears to not be a valid URL.'});
+			console.log('\nURL FAIL\n'+image['url']+'\n');
+			return validated = false;
+		}
+		else { return validated = true; console.log('\nSWAG\n'); }
 	}
 }
-
-var urlRegex = new RegExp('https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}');
 
 exports.addImage = function (req, res) {
 
 	var image = req.body;
+	var validated = false;
 	
-	// This section is all input validation
-	validateImageData();
+	validateImageData(image, res, validated);
+
+	if ( validated == true ) {
 	
-	console.log('Adding image: ' + JSON.stringify(image));
-	
-	db.collection('images', function (err, collection) {
-		collection.insert(image, {safe:true}, function (err, result) {
-			if (err) {
-				res.send({'error':'An error occurred on image insert.'});
-			} else {
-				console.log('Success: ' + JSON.stringify(result[0]));
-				res.send(result[0]);
-			}
+		console.log('Adding image: ' + JSON.stringify(image));
+		
+		db.collection('images', function (err, collection) {
+			collection.insert(image, {safe:true}, function (err, result) {
+				if (err) {
+					res.send({'error':'An error occurred on image insert.'});
+				} else {
+					console.log('Success: ' + JSON.stringify(result[0]));
+					res.send(result[0]);
+				}
+			});
 		});
-	});
+	}
 }
 
 exports.updateImage = function (req, res) {
