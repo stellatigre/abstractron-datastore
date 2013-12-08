@@ -45,7 +45,7 @@ function validateImageData(image, res) {
 	if (image) {
 		if(urlRegex.test(image['url']) == false) {
 			
-			res.send({'error':'URL value appears to not be a valid URL.'});
+			res.send({'error':'URL value appears to not be valid.'});
 			console.log('\nURL FAIL\n'+image['url']+'\n');
 			return validated = false;
 		}
