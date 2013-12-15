@@ -3,17 +3,17 @@ var flash 		= require('connect-flash'),	// flash
 	express  	= require('express'),	// express
 	mongo		= require('mongodb'),
 	MongoStore  = require('connect-mongo')(express), // mongo auth store
-	mongoose 	= require('mongoose'),	// mongoose
-	Schema  	= mongoose.Schema,
 	passport	= require('passport'),	// passport
 	LocalStrategy = require('passport-local').Strategy,
 	// LocalStrategy: basic auth
 	
+	/* Knocking this out until we use it
 	FacebookStrategy = require('passport-facebook').Strategy,
 	// App ID/Secret
 	FACEBOOK_APP_ID = "1436345559910277",
 	FACEBOOK_APP_SECRET = "54b38ae41d350af4e506b1218feb17ee",
-
+	*/
+	
 	app      	= express(),	
 	
 	// route modules
@@ -122,7 +122,7 @@ passport.use(new LocalStrategy(
 	}
 ));
 
-/* PASSPORT - FACEBOOK */
+/* PASSPORT - FACEBOOK 
 passport.use(new FacebookStrategy({
 	clientID: FACEBOOK_APP_ID,
 	clientSecret: FACEBOOK_APP_SECRET,
@@ -135,6 +135,7 @@ passport.use(new FacebookStrategy({
 		return done(null, profile);
 	}
 ));
+*/
 
 /* PASSPORT USER SERIALIZATION */
 passport.serializeUser(function(user, done) {
@@ -214,7 +215,7 @@ function ensureAuthenticated(req, res, next) {
 
 // /auth
 
-/// facebook
+/* facebook
 app.get('/auth/facebook',
 	passport.authenticate('facebook'),
 	function(req, res) {
@@ -226,6 +227,7 @@ app.get('/auth/facebook/callback',
 	function (req, res) {
 		res.send('Logged in');
 	});
+*/
 
 app.post('/authfail', login.loginFailed);
 app.post('/authok', login.loggedIn);

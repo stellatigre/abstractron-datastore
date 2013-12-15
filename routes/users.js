@@ -63,6 +63,16 @@ exports.addUser = function (req, res) {
 	// TODO: Check for existing user
 	
 	db.collection('users', function (err, collection) {
+		// Fail on existing username
+		collection.findOne({'username': user.username }, function (err, item) {
+			res.json({"error":"Username is already taken."});
+		});
+		
+		// Fail on existing email
+		collection.findOne({'email': user.email }, function (err, item) {
+			res.json({"error":"Email address is already registered."});
+		});
+	
 		collection.insert(user, {safe:true}, function (err, result) {
 			if (err) {
 				res.send({'error':'An error occurred on user insert.'});
