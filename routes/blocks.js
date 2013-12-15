@@ -19,31 +19,32 @@ db.open(function (err, db) {
 	}
 });
 
-// used below
+// used below, please leave outside the function so we're not recreating it
 var urlRegex = new RegExp('https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}');
 
 function validateBlockData(block, res, callback) {
 
 	var validated;
 
-        if (block) {
-                if(urlRegex.test(block['url']) == false) {
+	if (block) {
+		if(urlRegex.test(block['url']) == false) {
 			res.statusCode = 400;
-                        res.send({'error':'URL value appears to not be valid.'});
-                        validated = false;
-                }
-                else if(block['name'] == (undefined || "")) {
+			res.send({'error':'URL value appears to not be valid.'});
+			validated = false;
+		}
+		else if(block['name'] == (undefined || "")) {
 			res.statusCode = 400;
-                        res.send({'error':'Block lacks a name, please add one'});
-                        validated = false;
-                }
-                else { validated = true; }
-        
+			res.send({'error':'Block lacks a name, please add one'});
+			validated = false;
+		}
+		else { validated = true; }
+
 		if (validated) { callback(block, res) ; }
 		else { callback(); }			
 	}
 }
 
+// This is just the code that used to be in exports.addBlock, to be used as a callback
 function addBlockInternal (block, res) {
 
 	if ( block ) {
