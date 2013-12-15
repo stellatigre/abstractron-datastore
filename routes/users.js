@@ -65,12 +65,12 @@ exports.addUser = function (req, res) {
 	db.collection('users', function (err, collection) {
 		// Fail on existing username
 		collection.findOne({'username': user.username }, function (err, item) {
-			res.json({"error":"Username is already taken."});
+			res.status(500).send('Username is taken.');
 		});
 		
 		// Fail on existing email
 		collection.findOne({'email': user.email }, function (err, item) {
-			res.json({"error":"Email address is already registered."});
+			res.status(500).send('Email already registered.');
 		});
 	
 		collection.insert(user, {safe:true}, function (err, result) {
