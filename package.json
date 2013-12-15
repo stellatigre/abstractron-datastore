@@ -11,6 +11,6 @@
 	"connect-mongo": "*",
 	"passport": "*",
 	"passport-local": "*",
-	"mongodb": "*",
+	"mongodb": "*"
   }
 }
