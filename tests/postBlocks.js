@@ -51,6 +51,41 @@ describe ("POST /blocks - ", function () {
 		done();
 	});		
 
+
+	it('should return a descriptive error if the name is missing', function (done) {	
+
+		req({
+			uri: conf.baseUrl+path,
+			method : "POST",
+			form : { 
+				name : "",
+				url : "http://invalid.com",
+			}
+		},	function(err, res, body) {
+				if (err) done(err);
+				var data = JSON.parse(body)
+				assert.equal('Block lacks a name, please add one', data['error']);		
+				done();
+			});
+	});
+	
+	it('should return a descriptive error if the URL seems invalid', function (done) {	
+
+		req({
+			uri: conf.baseUrl+path,
+			method : "POST",
+			form : { 
+				name : "",
+				url : "http:/invalid.m",
+			}
+		},	function(err, res, body) {
+				if (err) done(err);
+				var data = JSON.parse(body)
+				assert.equal('URL value appears to not be valid.', data['error']);		
+				done();
+			});
+	});
+
 });
 
 

@@ -38,33 +38,65 @@ exports.findById = function (req, res) {
 	});
 };
 
-function validateImageData(image, res) {
 
-	var urlRegex = new RegExp('https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}');
+// We're gonna use this below, just didn't want to re-construct it all the time
+var urlRegex = new RegExp('https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}');
+
+var validateImageData = function(image, res, callback) {
+
+	var validated;
 
 	if (image) {
 		if(urlRegex.test(image['url']) == false) {
-			
+			res.statusCode = 400;
 			res.send({'error':'URL value appears to not be valid.'});
-			console.log('\nURL FAIL\n'+image['url']+'\n');
-			return validated = false;
+			validated = false;
 		}
 		else if(image['name'] == (undefined || "")) {
-			
+			res.statusCode = 400;
 			res.send({'error':'Image lacks a name, please add one'});
-			return validated = false;
+			validated = false;
 		} 
-		else { return validated = true; console.log('\nSWAG\n'); }
+		else { validated = true; }
+	
+
+	
+		if (validated) { 
+			callback(image, res);     //console.log('validated callback success');
+
+		}
+		else { 
+			callback() ;     //console.log ('callback being called with no arguments');  
+		}
+	}
+}
+
+var addImageInternal = function (image, res) {
+
+	if (image) {
+
+		console.log('Adding image: ' + JSON.stringify(image));
+		
+		db.collection('images', function (err, collection) {
+			collection.insert(image, {safe:true}, function (err, result) {
+
+				if (err) {
+					res.send({'error':'An error occurred on image insert.'});
+				} else {
+					console.log('Success: ' + JSON.stringify(result[0]));
+					res.send(result[0]);
+				}
+			});
+		});
 	}
 }
 
 exports.addImage = function (req, res) {
 
 	var image = req.body;
-	var validated = true;
 	
-	validateImageData(image, res);
-
+	validateImageData(image, res, addImageInternal);
+/*
 	if ( validated == true ) {
 	
 		console.log('Adding image: ' + JSON.stringify(image));
@@ -80,6 +112,7 @@ exports.addImage = function (req, res) {
 			});
 		});
 	}
+*/
 }
 
 exports.updateImage = function (req, res) {

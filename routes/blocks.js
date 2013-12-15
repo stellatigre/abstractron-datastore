@@ -19,6 +19,49 @@ db.open(function (err, db) {
 	}
 });
 
+// used below
+var urlRegex = new RegExp('https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}');
+
+function validateBlockData(block, res, callback) {
+
+	var validated;
+
+        if (block) {
+                if(urlRegex.test(block['url']) == false) {
+			res.statusCode = 400;
+                        res.send({'error':'URL value appears to not be valid.'});
+                        validated = false;
+                }
+                else if(block['name'] == (undefined || "")) {
+			res.statusCode = 400;
+                        res.send({'error':'Block lacks a name, please add one'});
+                        validated = false;
+                }
+                else { validated = true; }
+        
+		if (validated) { callback(block, res) ; }
+		else { callback(); }			
+	}
+}
+
+function addBlockInternal (block, res) {
+
+	if ( block ) {
+		console.log('Adding block: ' + JSON.stringify(block));
+		
+		db.collection('blocks', function (err, collection) {
+			collection.insert(block, {safe:true}, function (err, result) {
+				if (err) {
+					res.send({'error':'An error occurred on block insert.'});
+				} else {
+					console.log('Success: ' + JSON.stringify(result[0]));
+					res.send(result[0]);
+				}
+			});
+		});
+	}
+}
+
 // NOTE: Levels by userid may not work yet, but blocks are fine.
 exports.findByUserId = function (req, res) {
 	var userid = req.params.userid;
@@ -51,19 +94,8 @@ exports.findById = function (req, res) {
 };
 
 exports.addBlock = function (req, res) {
-	var block = req.body;
-	console.log('Adding block: ' + JSON.stringify(block));
 	
-	db.collection('blocks', function (err, collection) {
-		collection.insert(block, {safe:true}, function (err, result) {
-			if (err) {
-				res.send({'error':'An error occurred on block insert.'});
-			} else {
-				console.log('Success: ' + JSON.stringify(result[0]));
-				res.send(result[0]);
-			}
-		});
-	});
+	validateBlockData(req.body, res, addBlockInternal);
 }
 
 exports.updateBlock = function (req, res) {
