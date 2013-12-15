@@ -5,7 +5,7 @@ var Server = mongo.Server,
     BSON = mongo.BSONPure;
 
 var server = new Server('localhost', 27017, {auto_reconnect: true});
-db = new Db('abstractapi', server);
+db = new Db('abstractapi', server, {safe: true});
 
 db.open(function (err, db) {
 	if (!err) {
@@ -60,17 +60,16 @@ exports.addUser = function (req, res) {
 	var user = req.body;
 	console.log('Adding user: ' + JSON.stringify(user));
 	
-	// TODO: Check for existing user
-	
 	db.collection('users', function (err, collection) {
+	
 		// Fail on existing username
 		collection.findOne({'username': user.username }, function (err, item) {
-			res.status(500).send('Username is taken.');
+			res.end('Username is taken.');
 		});
 		
 		// Fail on existing email
 		collection.findOne({'email': user.email }, function (err, item) {
-			res.status(500).send('Email already registered.');
+			res.end('Email already registered.');
 		});
 	
 		collection.insert(user, {safe:true}, function (err, result) {
