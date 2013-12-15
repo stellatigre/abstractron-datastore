@@ -58,9 +58,7 @@ var validateImageData = function(image, res, callback) {
 			validated = false;
 		} 
 		else { validated = true; }
-	
-
-	
+		
 		if (validated) { 
 			callback(image, res);     //console.log('validated callback success');
 
@@ -93,26 +91,7 @@ var addImageInternal = function (image, res) {
 
 exports.addImage = function (req, res) {
 
-	var image = req.body;
-	
-	validateImageData(image, res, addImageInternal);
-/*
-	if ( validated == true ) {
-	
-		console.log('Adding image: ' + JSON.stringify(image));
-		
-		db.collection('images', function (err, collection) {
-			collection.insert(image, {safe:true}, function (err, result) {
-				if (err) {
-					res.send({'error':'An error occurred on image insert.'});
-				} else {
-					console.log('Success: ' + JSON.stringify(result[0]));
-					res.send(result[0]);
-				}
-			});
-		});
-	}
-*/
+	validateImageData(req.body, res, addImageInternal);
 }
 
 exports.updateImage = function (req, res) {
