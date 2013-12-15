@@ -52,24 +52,27 @@ describe ("POST /blocks - ", function () {
 	});		
 
 
-	it('should return a descriptive error if the name is missing', function (done) {	
+	it('should return an informative error & a 400 status code if the name is missing', function (done) {	
 
 		req({
 			uri: conf.baseUrl+path,
 			method : "POST",
 			form : { 
 				name : "",
-				url : "http://invalid.com",
+				url : "http://valid.com",
 			}
 		},	function(err, res, body) {
 				if (err) done(err);
-				var data = JSON.parse(body)
+				var data = JSON.parse(body);
+
+				assert.equal (res.statusCode , 400);
 				assert.equal('Block lacks a name, please add one', data['error']);		
 				done();
-			});
+			}
+		);
 	});
 	
-	it('should return a descriptive error if the URL seems invalid', function (done) {	
+	it('should return an informative error & 400 status code if the URL seems invalid', function (done) {	
 
 		req({
 			uri: conf.baseUrl+path,
@@ -80,10 +83,13 @@ describe ("POST /blocks - ", function () {
 			}
 		},	function(err, res, body) {
 				if (err) done(err);
-				var data = JSON.parse(body)
+				var data = JSON.parse(body);
+				
+				assert.equal (res.statusCode , 400);
 				assert.equal('URL value appears to not be valid.', data['error']);		
 				done();
-			});
+			}
+		);
 	});
 
 });
