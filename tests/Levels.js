@@ -12,7 +12,7 @@ describe ("GET /levels - ", function () {
 
 	var waitForResponseData = function(done) {
    		if (responseData !== undefined){ done(); }
-   		else setTimeout( function(){ waitForResponseData(done) }, 20 );
+   		else setTimeout( function(){ waitForResponseData(done) }, 10 );
 	 }
 
 	before( function getData(done) {                        // get response once
@@ -76,5 +76,21 @@ describe ("GET /levels - ", function () {
 		);
 		done();
 	});
-		
+
+	it('/:id  : should find & return levels by their unique :id string if in the DB, and return a 200 OK', function (done) {
+
+        req({
+            uri : conf.baseUrl+path+'/'+responseData[0]['_id'],
+            method: "GET"
+        }, function (err, res, body) {
+                if (err) done(err);
+                var data = JSON.parse(body);
+
+                assert.equal(200, res.statusCode);          // 200 OK ?
+                assert.equal(data['_id'], responseData[0]['_id']);  // did we get the id we asked for ? 
+                done();
+            }
+        );
+    });
+
 });
