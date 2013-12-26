@@ -162,6 +162,7 @@ app.configure(function () {
 	app.use(express.cookieParser('abstractsecret'));
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
+	app.use(express.compress());
 	app.use(express.session({ 
 		secret: 'abstractsecret', 
 		store: new  MongoStore({
