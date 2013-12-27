@@ -1,9 +1,7 @@
 var req = require("request");
-var async = require("async");
 var assert = require("chai").assert;
 
-var conf = require('./lib/testConfig.json');  	// same directory plz
-
+var conf = require('./lib/testConfig.json');  	
 var paths = ['/images', '/levels', '/blocks'];
 
 function getRandomInt(min, max) {
@@ -22,7 +20,6 @@ describe ("Content Encoding - any route : ", function () {
 			assert.isUndefined(res.headers['content-encoding']);
 			done();	
 		});
-		
 	});
 
 	it('should return gzip-compressed JSON data if the "Accept-Encoding" header\'s value is "gzip"', function(done) {
@@ -37,7 +34,6 @@ describe ("Content Encoding - any route : ", function () {
 				assert.equal(res.headers['content-encoding'], 'gzip');
 				done();
 		});
-		
 	});
 
 });
