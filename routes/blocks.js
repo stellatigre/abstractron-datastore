@@ -137,18 +137,7 @@ exports.deleteBlock = function (req, res) {
 /* SAMPLE DATA */
 var populateDB = function() {
 	
-	var blocks = [
-	{
-		name: 'Bill Gates',
-		url: 'http://www.geofffox.com/wp-content/uploads/2010/09/bill_gates.jpg',
-		userid: "52873ddc77ca9dc430000004"
-	},
-	{
-		name: 'Emilio Estevez',
-		url:  'http://2.bp.blogspot.com/-HnxvM6zP6kw/Te7oO9wWntI/AAAAAAAAADc/TNJiKL5lf1M/s320/md1.jpg',
-		userid: "52873ddc77ca9dc430000004"
-	}
-	];
+	var blocks = require('./sample_data/blocks.json');
 	
 	db.collection('blocks', function (err, collection) {
 		collection.insert(blocks, {safe:true}, function (err, result) {});
