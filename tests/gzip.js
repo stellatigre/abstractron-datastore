@@ -2,7 +2,6 @@ var req = require("request");
 var async = require("async");
 var assert = require("chai").assert;
 
-var AT = require('./lib/testHelpers.js');		// for both of these,
 var conf = require('./lib/testConfig.json');  	// same directory plz
 
 var paths = ['/images', '/levels', '/blocks'];
@@ -19,7 +18,7 @@ describe ("Content Encoding - any route : ", function () {
 	it('should return uncompressed JSON data if no "Accept-Encoding" header is supplied', function(done) {
 		
 		req.get(conf.baseUrl+path, function (err, res, body) {
-			//console.log(res.headers);
+		
 			assert.isUndefined(res.headers['content-encoding']);
 			done();	
 		});
@@ -34,7 +33,7 @@ describe ("Content Encoding - any route : ", function () {
 					'Accept-Encoding' : 'gzip'
 				}
 			},	function (err, res, body) {
-				//console.log(res.headers);
+				
 				assert.equal(res.headers['content-encoding'], 'gzip');
 				done();
 		});
