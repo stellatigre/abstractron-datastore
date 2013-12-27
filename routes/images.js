@@ -61,18 +61,14 @@ var validateImageData = function(image, res, callback) {
 		
 		if (validated) { 
 			callback(image, res);     //console.log('validated callback success');
-
 		}
-		else { 
-			callback() ;     //console.log ('callback being called with no arguments');  
-		}
+		else { callback(); }  //console.log ('callback being called with no arguments'); 
 	}
 }
 
 var addImageInternal = function (image, res) {
 
 	if (image) {
-
 		console.log('Adding image: ' + JSON.stringify(image));
 		
 		db.collection('images', function (err, collection) {
@@ -98,7 +94,7 @@ exports.updateImage = function (req, res) {
 	var id = req.params.id;
 	var image = req.body;
 	
-	validateImageData();
+	//validateImageData();
 
 	console.log('Updating image: ' + id);
 	console.log(JSON.stringify(image));
@@ -135,16 +131,7 @@ exports.deleteImage = function (req, res) {
 /* SAMPLE DATA */
 var populateDB = function() {
 	
-	var images = [
-	{
-		name: 'Bill Gates',
-		url: 'http://www.geofffox.com/wp-content/uploads/2010/09/bill_gates.jpg'
-	},
-	{
-		name: 'Emilio Estevez',
-		url:  'http://2.bp.blogspot.com/-HnxvM6zP6kw/Te7oO9wWntI/AAAAAAAAADc/TNJiKL5lf1M/s320/md1.jpg'
-	}
-	];
+	var images = require('./sample_data/images.json');
 	
 	db.collection('images', function (err, collection) {
 		collection.insert(images, {safe:true}, function (err, result) {});

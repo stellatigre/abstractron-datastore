@@ -123,20 +123,7 @@ exports.deleteUser = function (req, res) {
 /* SAMPLE DATA */
 var populateDB = function() {
 	
-	var users = [
-	{
-		username: 'user1',
-		email: 'user1@example.com'
-	},
-	{
-		username: 'user2',
-		email: 'user2@example.com'
-	},
-	{
-		username: 'user3',
-		email: 'user3@example.com'
-	}
-	];
+	var users = require('./sample_data/users.json');
 	
 	db.collection('users', function (err, collection) {
 		collection.insert(users, {safe:true}, function (err, result) {});
