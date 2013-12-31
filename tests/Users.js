@@ -5,16 +5,16 @@ var assert = require("chai").assert;
 var AT = require('./lib/testHelpers.js');	// for both of these,
 var conf = require('./lib/testConfig.json');  	// same directory plz
 
+var path = '/users';
+
 describe ("User Routes / Operations", function () {
 	describe("\n    GET ", function () {
 		 
-	var path = '/users';
-	var responseData;
-
-	var waitForResponseData = function(done) {
-   		if (responseData !== undefined){ done(); }
-   		else setTimeout( function(){ waitForResponseData(done) }, 20 );
-	 }
+		var responseData;
+		var waitForResponseData = function(done) {
+			if (responseData !== undefined){ done(); }
+			else setTimeout( function(){ waitForResponseData(done) }, 20 );
+		 }
 
 		describe(path, function () {
 
@@ -58,5 +58,19 @@ describe ("User Routes / Operations", function () {
 				});
 			});
 		});
+	
+		describe(path+'/login/:username ', function () {
+
+			it('should return the "_id" of the requested username', function (done) {
+
+				req.get(conf.baseUrl+path+'/login/'+responseData[0].username, function (err, res, body) {
+					var data = JSON.parse(body);
+					
+					assert.equal(responseData[0]._id, data._id);
+					done();
+				});
+			});
+		});
+
 	});
 });
