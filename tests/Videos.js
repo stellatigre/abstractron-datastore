@@ -100,7 +100,7 @@ describe ("Videos Routes / Operations", function () {
 				done();
 			});
 
-			it('should produce a res5fb08a067b8f27423915ponse that has "name" and "url" fields which match our input', function(done) { 
+			it('should produce a response that has "name" and "url" fields which match our input', function(done) { 
 				assert.equal(postResponseData['name'], testName);
 				assert.equal(postResponseData['url'] , testUrl);
 				done();
