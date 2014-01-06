@@ -19,6 +19,50 @@ db.open(function (err, db) {
 	}
 });
 
+var urlRegex = new RegExp('https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}');
+
+var validateVideoData = function(video, res, callback) {
+
+	var validated;
+
+	if (video) {
+		if(urlRegex.test(video['url']) == false) {
+			res.statusCode = 400;
+			res.send({'error':'URL value appears to not be valid.'});
+			validated = false;
+		}
+		else if(video['name'] == (undefined || "")) {
+			res.statusCode = 400;
+			res.send({'error':'Video lacks a name, please add one'});
+			validated = false;
+		} 
+		else { validated = true; }
+		
+		if (validated) { 
+			callback(video, res);     //console.log('validated callback success');
+		}
+		else { callback(); }  //console.log ('callback being called with no arguments'); 
+	}
+}
+
+var addVideoInternal = function (video, res) {
+
+	if (video) {
+		console.log('Adding video: ' + JSON.stringify(video));
+		
+		db.collection('videos', function (err, collection) {
+			collection.insert(video, {safe:true}, function (err, result) {
+				if (err) {
+					res.send({'error':'An error occurred on video insert.'});
+				} else {
+					console.log('Success: ' + JSON.stringify(result[0]));
+					res.send(result[0]);
+				}
+			});
+		});
+	}
+}
+	
 exports.findAll = function (req, res) {
 	db.collection('videos', function (err, collection) {
 		collection.find().toArray(function (err, items) {
@@ -37,20 +81,8 @@ exports.findById = function (req, res) {
 	});
 };
 
-exports.addVideo = function (req, res) {
-	var video = req.body;
-	console.log('Adding video: ' + JSON.stringify(video));
-	
-	db.collection('videos', function (err, collection) {
-		collection.insert(video, {safe:true}, function (err, result) {
-			if (err) {
-				res.send({'error':'An error occurred on video insert.'});
-			} else {
-				console.log('Success: ' + JSON.stringify(result[0]));
-				res.send(result[0]);
-			}
-		});
-	});
+exports.addVideo = function (req, res) {		// validate, then add on callback
+	validateVideoData(req.body, res, addVideoInternal);
 }
 
 exports.updateVideo = function (req, res) {
