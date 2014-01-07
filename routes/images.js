@@ -94,8 +94,6 @@ exports.updateImage = function (req, res) {
 	var id = req.params.id;
 	var image = req.body;
 	
-	//validateImageData();
-
 	console.log('Updating image: ' + id);
 	console.log(JSON.stringify(image));
 	
