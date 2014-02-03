@@ -2,19 +2,15 @@ var req = require("request");
 var async = require("async");
 var assert = require("chai").assert;
 
-var AT = require('./lib/testHelpers.js');	// for both of these,
+var help = require('./lib/testHelpers.js');	// for both of these,
 var conf = require('./lib/testConfig.json');  	// same directory plz
 
 var path = '/users';
 
 describe ("User Routes / Operations", function () {
 	describe("\n    GET ", function () {
-		 
+ 
 		var responseData;
-		var waitForResponseData = function(done) {
-			if (responseData !== undefined){ done(); }
-			else setTimeout( function(){ waitForResponseData(done) }, 20 );
-		 }
 
 		describe(path, function () {
 
@@ -22,25 +18,25 @@ describe ("User Routes / Operations", function () {
 					req.get(conf.baseUrl+path, function (err, res, body){
 						if (err) done(err);                         // test after we save it
 						responseData = JSON.parse(body);    // save it here
-					assert.equal(res.statusCode, 200);  // Make sure we get a 200 OK
+						assert.equal(res.statusCode, 200);  // Make sure we get a 200 OK
+						help.waitForData(responseData, done);
 					});
-					waitForResponseData(done);		// don't test until we get the response
 			});
 			
 			it('should return Objects ', function (done) {	
-				async.forEach(responseData, assert.isObject, AT.errFunction);	// we get Objects ?	
+				async.forEach(responseData, assert.isObject, help.errFunction);	// we get Objects ?	
 				done();
 			});
 
 			it('each object should have 3 fields filled with strings : username, email, _id', function(done) { 
 				
 				async.forEach(responseData, function (item, callback) {		
-					assert.isString(item['_id']);				// verify fields
+					assert.isString(item['_id']);				
 					assert.isString(item['email']);
 					assert.isString(item['_id']);
 					callback();	
 					},
-					AT.errFunction
+					help.errFunction
 				);
 				done();
 			});

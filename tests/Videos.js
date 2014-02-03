@@ -2,7 +2,7 @@ var req = require("request");
 var async = require("async");
 var assert = require("chai").assert;
 
-var AT = require('./lib/testHelpers.js');		// for both of these,
+var help = require('./lib/testHelpers.js');		// for both of these,
 var conf = require('./lib/testConfig.json');  	// same directory plz
 
 var path = '/videos';
@@ -11,10 +11,6 @@ describe ("Videos Routes / Operations", function () {
 	describe("\n    GET ", function() {
 
 		var responseData;
-		var waitForData = function(done) {
-			if (responseData !== undefined){ done(); }
-			else setTimeout( function(){ waitForData(done); }, 10 );
-		}
 
 		describe ("/videos", function() {
 			
@@ -22,13 +18,13 @@ describe ("Videos Routes / Operations", function () {
 					req.get(conf.baseUrl+path, function (err, res, body){
 						if (err) done(err);                         // test after we save it
 						responseData = JSON.parse(body);    // save it here
-					assert.equal(res.statusCode, 200);  // Make sure we get a 200 OK
+						assert.equal(res.statusCode, 200);  // Make sure we get a 200 OK
+						help.waitForData(responseData, done);		// don't test until we get the response
 					});
-					waitForData(done);		// don't test until we get the response
 			});
 
 			it('should return Objects ', function (done) {	
-				async.forEach(responseData, assert.isObject, AT.errFunction);	// we get Objects ?	
+				async.forEach(responseData, assert.isObject, help.errFunction);	// we get Objects ?	
 				done();
 			});
 
@@ -41,7 +37,7 @@ describe ("Videos Routes / Operations", function () {
 					assert.isString(item['url']);
 					callback();	
 
-				}, AT.errFunction);
+				}, help.errFunction);
 				done();
 			});		
 		});
@@ -70,10 +66,7 @@ describe ("Videos Routes / Operations", function () {
 	describe ("\n    POST ", function () {
 
 		var postResponseData;
-		var waitForData = function(done) {
-			if (postResponseData !== undefined){ done(); }
-			else setTimeout( function(){ waitForData(done); }, 10 );
-		}
+
 		var testName = 'testCat';
 		var testUrl  = 'http://i.telegraph.co.uk/multimedia/archive/02351/cross-eyed-cat_2351472k.jpg';
 
@@ -89,8 +82,8 @@ describe ("Videos Routes / Operations", function () {
 					if (err) done(err);                         
 					postResponseData = JSON.parse(body);    
 					assert.equal(res.statusCode, 200);  // Make sure we get a 200 OK
+					help.waitForData(postResponseData, done);		// don't test until we get the response
 				});
-				waitForData(done);		// don't test until we get the response
 		});
 		
 		describe('/videos , params: "name" & "url"', function() {
