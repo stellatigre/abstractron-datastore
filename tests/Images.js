@@ -141,7 +141,7 @@ describe ("Images Routes / Operations", function () {
 	
 	describe('PUT ', function() {
 
-		describe('/users/:id ', function() {
+		describe(path+'/:id ', function() {
 
 			it('Should update a record using the _id, and return a 200 OK + updated record', function(done) {
 

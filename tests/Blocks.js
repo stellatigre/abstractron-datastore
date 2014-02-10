@@ -8,9 +8,10 @@ var conf = require('./lib/testConfig.json');  	// same directory plz
 var path = '/blocks';
 
 describe ("Block Routes / Operations", function () {
+
+	var responseData;
+
 	describe("\n    GET ", function() {
-		
-		var responseData;
 
 		describe(path, function () {
 			
@@ -116,6 +117,7 @@ describe ("Block Routes / Operations", function () {
 					form : { 
 						name : "",
 						url : "http://valid.com",
+						userid : testId
 					}
 				},	function(err, res, body) {
 						if (err) done(err);
@@ -136,6 +138,7 @@ describe ("Block Routes / Operations", function () {
 					form : { 
 						name : "",
 						url : "http:/invalid.m",
+						userid : testId
 					}
 				},	function(err, res, body) {
 						if (err) done(err);
@@ -148,5 +151,35 @@ describe ("Block Routes / Operations", function () {
 				);
 			});
 		});	
+	});
+	
+	describe('PUT ', function() {
+
+		describe(path+'/:id ', function() {
+
+			it('Should update a record using the _id, and return a 200 OK + updated record', function(done) {
+				var first = responseData[0];
+
+				req({
+					uri: conf.baseUrl+path+'/'+first._id ,
+					method : "PUT",
+					form : { 
+						name : first.name+'_updated',
+						url : first.url+'/update',
+						userid : first.userid
+					}
+				},	function(err, res, body) {
+						if (err) done(err);
+						var data = JSON.parse(body);
+
+						assert.equal(200, res.statusCode);
+						assert.equal(data.name, first.name+'_updated');
+						assert.equal(data.url, first.url+'/update');
+						assert.equal(data.userid, first.userid)
+						done();
+					
+				});
+			});
+		});
 	});
 });
