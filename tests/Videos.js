@@ -7,10 +7,14 @@ var conf = require('./lib/testConfig.json');  	// same directory plz
 
 var path = '/videos';
 
-describe ("Videos Routes / Operations", function () {
-	describe("\n    GET ", function() {
+var testName = 'testCat';
+var testUrl  = 'http://i.telegraph.co.uk/multimedia/archive/02351/cross-eyed-cat_2351472k.jpg';
 
-		var responseData;
+describe ("Videos Routes / Operations", function () {
+
+	var responseData;
+	
+	describe("\n    GET ", function() {
 
 		describe ("/videos", function() {
 			
@@ -66,9 +70,6 @@ describe ("Videos Routes / Operations", function () {
 	describe ("\n    POST ", function () {
 
 		var postResponseData;
-
-		var testName = 'testCat';
-		var testUrl  = 'http://i.telegraph.co.uk/multimedia/archive/02351/cross-eyed-cat_2351472k.jpg';
 
 		before( function getData(done) {                        // get response before tests
 				req({
@@ -137,6 +138,33 @@ describe ("Videos Routes / Operations", function () {
 					});
 			});
 			
+		});
+	});
+
+	describe('PUT ', function() {
+
+		describe(path+'/:id ', function() {
+
+			it('Should update a record using the _id, and return a 200 OK + updated record', function(done) {
+
+				req({
+					uri: conf.baseUrl+path+'/'+responseData[0]._id ,
+					method : "PUT",
+					form : { 
+						name : testName+'_updated',
+						url : testUrl+'/update'
+					}
+				},	function(err, res, body) {
+						if (err) done(err);
+						var data = JSON.parse(body);
+
+						assert.equal(200, res.statusCode);
+						assert.equal(data.name, testName+'_updated');
+						assert.equal(data.url, testUrl+'/update');
+						done();
+					
+				});
+			});
 		});
 	});
 });
