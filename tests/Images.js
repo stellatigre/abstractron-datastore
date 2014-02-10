@@ -7,11 +7,14 @@ var conf = require('./lib/testConfig.json');  	// same directory plz
 
 var path = '/images';
 
+var testName = 'testCat';
+var testUrl  = 'http://i.telegraph.co.uk/multimedia/archive/02351/cross-eyed-cat_2351472k.jpg';
+
 describe ("Images Routes / Operations", function () {
+
+	var responseData;
+
 	describe("\n    GET ", function() {
-
-		var responseData;
-
 		describe ("/images", function() {
 			
 			before( function getData(done) {                        // get response once
@@ -67,9 +70,6 @@ describe ("Images Routes / Operations", function () {
 
 		var postResponseData;
 		
-		var testName = 'testCat';
-		var testUrl  = 'http://i.telegraph.co.uk/multimedia/archive/02351/cross-eyed-cat_2351472k.jpg';
-
 		before( function getData(done) {                        // get response before tests
 				req({
 					uri : conf.baseUrl+path, 
@@ -136,7 +136,54 @@ describe ("Images Routes / Operations", function () {
 						done();
 					});
 			});
+		});
+	});
 
+	describe('\nPUT ', function() {
+
+		describe('/users/:id ', function() {
+
+			it('Should update a record using the _id, and return a 200 OK + updated record', function(done) {
+
+				req({
+					uri: conf.baseUrl+path+'/'+responseData[0]._id ,
+					method : "PUT",
+					form : { 
+						name : testName+'_updated',
+						url : testUrl+'/update'
+					}
+				},	function(err, res, body) {
+						if (err) done(err);
+						var data = JSON.parse(body);
+
+						assert.equal(200, res.statusCode);
+						assert.equal(data.name, testName+'_updated');
+						assert.equal(data.url, testUrl+'/update');
+						done();
+					
+				});
+			});
+
+			it('Should update a record using the _id, and return a 400 Bad Request', function(done) {
+
+				req({
+					uri: conf.baseUrl+path+'/'+responseData[0]._id ,
+					method : "PUT",
+					form : {  
+						url : 'hi' 
+					}
+				},	function(err, res, body) {
+						if (err) done(err);
+						var data = JSON.parse(body);
+
+						console.log(data);
+						assert.equal(200, res.statusCode);
+						assert.equal(data.name, testName);
+						assert.equal(data.url, testUrl);
+						done();
+					
+				});
+			});
 		});
 	});
 });
