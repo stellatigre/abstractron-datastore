@@ -135,11 +135,11 @@ describe ("Images Routes / Operations", function () {
 						assert.equal('URL value appears to not be valid.', data['error']);		
 						done();
 					});
-			});
+				});
 		});
 	});
-
-	describe('\nPUT ', function() {
+	
+	describe('PUT ', function() {
 
 		describe('/users/:id ', function() {
 
@@ -163,7 +163,7 @@ describe ("Images Routes / Operations", function () {
 					
 				});
 			});
-
+			/*
 			it('Should update a record using the _id, and return a 400 Bad Request', function(done) {
 
 				req({
@@ -174,6 +174,7 @@ describe ("Images Routes / Operations", function () {
 					}
 				},	function(err, res, body) {
 						if (err) done(err);
+						console.log(body);
 						var data = JSON.parse(body);
 
 						console.log(data);
@@ -184,6 +185,7 @@ describe ("Images Routes / Operations", function () {
 					
 				});
 			});
+			*/
 		});
 	});
 });
