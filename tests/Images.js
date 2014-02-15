@@ -163,29 +163,40 @@ describe ("Images Routes / Operations", function () {
 					
 				});
 			});
-			/*
-			it('Should update a record using the _id, and return a 400 Bad Request', function(done) {
+		});
+	});
+
+	describe('DELETE ', function() {
+
+		describe(path+'/:id ', function() {
+
+			it('Should delete a record using the _id, and return a 200 OK + updated record', function(done) {
 
 				req({
-					uri: conf.baseUrl+path+'/'+responseData[0]._id ,
-					method : "PUT",
-					form : {  
-						url : 'hi' 
-					}
-				},	function(err, res, body) {
+					uri: conf.baseUrl+path+'/'+responseData[(responseData.length-1)]._id ,
+					method : "DELETE"
+				},	
+					function(err, res, body) {
 						if (err) done(err);
-						console.log(body);
-						var data = JSON.parse(body);
-
-						console.log(data);
+						//var data = JSON.parse(body);
+						
 						assert.equal(200, res.statusCode);
-						assert.equal(data.name, testName);
-						assert.equal(data.url, testUrl);
+						assert.equal(body, "{}");
+				});
+
+				
+				req.get({
+					uri: conf.baseUrl+path+'/'+responseData[(responseData.length-1)]._id ,
+				},	
+					function(err, res, body) {
+						if (err) done(err);
+						//var data = JSON.parse(body);
+
+						assert.equal(200, res.statusCode);
+						assert.equal(body, '');
 						done();
-					
 				});
 			});
-			*/
 		});
 	});
 });
