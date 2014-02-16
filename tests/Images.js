@@ -7,13 +7,10 @@ var conf = require('./lib/testConfig.json');  	// same directory plz
 
 var path = '/images';
 
-var testName = 'testCat';
-var testUrl  = 'http://i.telegraph.co.uk/multimedia/archive/02351/cross-eyed-cat_2351472k.jpg';
-
 describe ("Images Routes / Operations", function () {
 
 	var responseData;
-
+	
 	describe("\n    GET ", function() {
 		describe ("/images", function() {
 			
@@ -34,13 +31,13 @@ describe ("Images Routes / Operations", function () {
 			it('each object returned has 3 fields populated with strings :  name, url, _id', function(done) { 
 				
 				async.forEach(responseData, function (item, callback) {		
-					
+
 					assert.isString(item['_id']);				// verify fields
 					assert.isString(item['name']);
 					assert.isString(item['url']);
 					callback();	
-
-				}, help.errFunction);
+				},
+					 help.errFunction);
 				done();
 			});		
 		});
@@ -49,9 +46,8 @@ describe ("Images Routes / Operations", function () {
 			
 			it('should find & return images by their unique :id string if in the DB, and return a 200 OK', function (done) {
 			
-				req({
+				req.get({
 					uri : conf.baseUrl+path+'/'+responseData[0]['_id'],
-					method: "GET"
 				}, function (err, res, body) {
 						if (err) done(err);
 						var data = JSON.parse(body);
@@ -66,7 +62,7 @@ describe ("Images Routes / Operations", function () {
 		});
 	});
 
-	describe ("\n    POST ", function () {
+	describe ("POST", function () {
 
 		var postResponseData;
 		
@@ -75,8 +71,8 @@ describe ("Images Routes / Operations", function () {
 					uri : conf.baseUrl+path, 
 					method : "POST", 
 					form : {
-						name : testName,
-						url : testUrl
+						name : help.testName,
+						url : help.testUrl
 					}	
 				}, function (err, res, body){
 					if (err) done(err);                         
@@ -94,8 +90,8 @@ describe ("Images Routes / Operations", function () {
 			});
 
 			it('should produce a response that has "name" and "url" fields which match our input', function(done) { 
-				assert.equal(postResponseData['name'], testName);
-				assert.equal(postResponseData['url'] , testUrl);
+				assert.equal(postResponseData['name'], help.testName);
+				assert.equal(postResponseData['url'] , help.testUrl);
 				done();
 			});		
 
@@ -135,7 +131,7 @@ describe ("Images Routes / Operations", function () {
 						assert.equal('URL value appears to not be valid.', data['error']);		
 						done();
 					});
-				});
+			});
 		});
 	});
 	
@@ -149,43 +145,49 @@ describe ("Images Routes / Operations", function () {
 					uri: conf.baseUrl+path+'/'+responseData[0]._id ,
 					method : "PUT",
 					form : { 
-						name : testName+'_updated',
-						url : testUrl+'/update'
+						name : help.testName+'_updated',
+						url : help.testUrl+'/update'
 					}
 				},	function(err, res, body) {
 						if (err) done(err);
 						var data = JSON.parse(body);
 
 						assert.equal(200, res.statusCode);
-						assert.equal(data.name, testName+'_updated');
-						assert.equal(data.url, testUrl+'/update');
+						assert.equal(data.name, help.testName+'_updated');
+						assert.equal(data.url, help.testUrl+'/update');
 						done();
-					
 				});
 			});
-			/*
-			it('Should update a record using the _id, and return a 400 Bad Request', function(done) {
+		});
+	});
+
+	describe('DELETE ', function() {
+		describe(path+'/:id ', function() {
+
+			it('Should delete a record using the _id, and return a 200 OK + no body', function(done) {
 
 				req({
-					uri: conf.baseUrl+path+'/'+responseData[0]._id ,
-					method : "PUT",
-					form : {  
-						url : 'hi' 
-					}
-				},	function(err, res, body) {
+					uri: conf.baseUrl+path+'/'+responseData[(responseData.length-1)]._id ,
+					method : "DELETE"
+				},	
+					function(err, res, body) {
 						if (err) done(err);
-						console.log(body);
-						var data = JSON.parse(body);
-
-						console.log(data);
+						
 						assert.equal(200, res.statusCode);
-						assert.equal(data.name, testName);
-						assert.equal(data.url, testUrl);
+						assert.equal(body, "{}");
+				});
+				
+				req.get({
+					uri: conf.baseUrl+path+'/'+responseData[(responseData.length-1)]._id ,
+				},	
+					function(err, res, body) {
+						if (err) done(err);
+
+						assert.equal(200, res.statusCode);
+						assert.equal(body, '');
 						done();
-					
 				});
 			});
-			*/
 		});
 	});
 });

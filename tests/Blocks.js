@@ -12,7 +12,6 @@ describe ("Block Routes / Operations", function () {
 	var responseData;
 
 	describe("\n    GET ", function() {
-
 		describe(path, function () {
 			
 			before( function getData(done) {                        // get response once
@@ -67,12 +66,8 @@ describe ("Block Routes / Operations", function () {
 		});
 	});
 
-	describe('\n    POST ', function () {
+	describe('POST', function () {
 		describe(path+', params : "name", "url", & "userid"', function () {
-		
-			var testName = 'testCat';
-			var testId = '52873ddc77ca9dc430000004';
-			var testUrl  = 'http://i.telegraph.co.uk/multimedia/archive/02351/cross-eyed-cat_2351472k.jpg';
 			
 			var postResponseData;
 
@@ -81,9 +76,9 @@ describe ("Block Routes / Operations", function () {
 						uri : conf.baseUrl+path, 
 						method : "POST", 
 						form : {
-							name : testName,
-							url : testUrl,
-							userid: testId
+							name : help.testName,
+							url : help.testUrl,
+							userid: help.testId
 						}	
 					}, function (err, res, body){
 						if (err) done(err);                         
@@ -101,13 +96,12 @@ describe ("Block Routes / Operations", function () {
 
 			it('should produce a response that has "name", "url", & "userid" fields which match our input', function(done) { 
 			
-				assert.equal(postResponseData['name'], testName);
-				assert.equal(postResponseData['url'] , testUrl);
-				assert.equal(postResponseData['userid'] , testId);
+				assert.equal(postResponseData['name'], help.testName);
+				assert.equal(postResponseData['url'] , help.testUrl);
+				assert.equal(postResponseData['userid'] , help.testId);
 			
 				done();
 			});		
-
 
 			it('should return an informative error & a 400 status code if the name is missing', function (done) {	
 
@@ -117,7 +111,7 @@ describe ("Block Routes / Operations", function () {
 					form : { 
 						name : "",
 						url : "http://valid.com",
-						userid : testId
+						userid : help.testId
 					}
 				},	function(err, res, body) {
 						if (err) done(err);
@@ -138,7 +132,7 @@ describe ("Block Routes / Operations", function () {
 					form : { 
 						name : "",
 						url : "http:/invalid.m",
-						userid : testId
+						userid : help.testId
 					}
 				},	function(err, res, body) {
 						if (err) done(err);
@@ -154,7 +148,6 @@ describe ("Block Routes / Operations", function () {
 	});
 	
 	describe('PUT ', function() {
-
 		describe(path+'/:id ', function() {
 
 			it('Should update a record using the _id, and return a 200 OK + updated record', function(done) {
@@ -176,8 +169,38 @@ describe ("Block Routes / Operations", function () {
 						assert.equal(data.name, first.name+'_updated');
 						assert.equal(data.url, first.url+'/update');
 						assert.equal(data.userid, first.userid)
+						
 						done();
-					
+				});
+			});
+		});
+	});
+
+	describe('DELETE ', function() {
+		describe(path+'/:id ', function() {
+
+			it('Should delete a record using the _id, and return a 200 OK + updated record', function(done) {
+
+				req({
+					uri: conf.baseUrl+path+'/'+responseData[(responseData.length-1)]._id ,
+					method : "DELETE"
+				},	
+					function(err, res, body) {
+						if (err) done(err);
+						
+						assert.equal(200, res.statusCode);
+						assert.equal(body, "{}");
+				});
+				
+				req.get({
+					uri: conf.baseUrl+path+'/'+responseData[(responseData.length-1)]._id ,
+				},	
+					function(err, res, body) {
+						if (err) done(err);
+
+						assert.equal(200, res.statusCode);
+						assert.equal(body, '');
+						done();
 				});
 			});
 		});
