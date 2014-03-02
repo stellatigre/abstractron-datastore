@@ -1,8 +1,8 @@
 ### DEPENDENCIES ###
 Promise = require 'bluebird'
+Promise.longStackTraces()
 flash 		= require 'connect-flash'	# flash
 express		= require 'express' # express
-mongo		= require 'mongodb'
 MongoStore	= require('connect-mongo')(express) # mongo auth store
 passport	= require 'passport'	# passport
 LocalStrategy = require('passport-local').Strategy
@@ -25,20 +25,9 @@ blocks = require './routes/blocks'
 login	= require './routes/login'
 register = require './routes/register'
 
+DB = require './DB'
 
-openDatabase = new Promise (resolve, reject)->
-	Server = mongo.Server
-	Db = mongo.Db
-	BSON = mongo.BSONPure
-	server = new Server 'localhost', 27017, auto_reconnect: true
-	db = new Db 'abstractapi', server, safe: false
-	db.open (err, db) ->
-		if err
-			reject new Error 'Could not open connection to database: '+err
-		else
-			resolve db
-
-openDatabase
+DB.open()
 .done (db)->
 	findOne = (collectionName, attributes)->
 		new Promise (resolve, reject)->
