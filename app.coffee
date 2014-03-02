@@ -30,14 +30,17 @@ DB = require './DB'
 DB.open()
 .done (db)->
 	findOne = (collectionName, attributes)->
-		new Promise (resolve, reject)->
-			db.collection collectionName, (err, collection)->
-				reject new Error 'Could not select collection: '+collectionName
+			DB.collection(collectionName)
+			.catch(->
+				throw new Error 'Could not select collection: '+collectionName
+			)
+			.then((collection)->
 				collection.findOne attributes, (err, item)->
 					if err
-						reject err
+						Promise.reject err
 					else
-						resolve item
+						Promise.resolve item
+			)
 	findSessionUserById = (id)->
 		findOne 'sessions', _id: new BSON.ObjectID id
 	findUserByUsername = (username)->
