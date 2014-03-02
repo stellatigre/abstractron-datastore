@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "forever app.js",
+    "start": "forever -c coffee app.coffee",
     "test": "mocha -R spec tests/"
   },
   "dependencies": {
