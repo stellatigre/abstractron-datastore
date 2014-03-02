@@ -32,7 +32,6 @@ BSON = mongo.BSONPure
 server = new Server 'localhost', 27017, auto_reconnect: true
 db = new Db 'abstractapi', server, safe: false
 
-
 findSessionUserById = (id, fn) ->
 	db.open (err, db) ->
 		if err
@@ -45,8 +44,6 @@ findSessionUserById = (id, fn) ->
 					fn null, item
 				return
 		return
-
-	fn new Error("User " + id + " does not exist")
 	return
 
 findUserByUsername = (username, fn) ->
