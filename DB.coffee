@@ -17,5 +17,16 @@ class DB
 
 	open: -> @openPromise
 
+	collection: (collectionName)->
+		new Promise (resolve, reject)=>
+			@open()
+			.then (db)->
+				db.collection "users", {strict: true}, (err, data)->
+					if err
+						reject err
+					else
+						resolve data
+
+
 
 module.exports = new DB

@@ -1,33 +1,20 @@
-mongo = require("mongodb")
-Server = mongo.Server
-Db = mongo.Db
+Promise = require 'bluebird'
+mongo = require 'mongodb'
 BSON = mongo.BSONPure
-server = new Server("localhost", 27017,
-	auto_reconnect: true
-)
-db = new Db("abstractapi", server,
-	safe: true
-)
-db.open (err, db) ->
-	unless err
-		db.collection "users",
-			strict: true
-		, (err, collection) ->
-			if err
-				console.log "Levels collection does not exist, creating from sample data."
-				populateDB()
-			return
 
-		db.collection "levels",
-			strict: true
-		, (err, collection) ->
-			if err
-				console.log "Levels collection does not exist, creating from sample data."
-				populateDB()
-			return
+DB = require '../DB'
 
-		console.log "levels: Connection opened (users, levels)."
-	return
+Promise.all([
+	DB.collection('users')
+	DB.collection('levels')
+])
+.catch(->
+	console.log "Levels collection does not exist, creating from sample data."
+	populateDB()
+	Promise.resolve()
+)
+.then ->
+	console.log "levels: Connection opened (users, levels)."
 
 
 # NOTE: This is just returning all records for now, when none contain
@@ -35,44 +22,38 @@ db.open (err, db) ->
 exports.findByUserId = (req, res) ->
 	userid = req.params.userid
 	console.log "Retrieving levels for user: " + userid
-	db.collection "levels", (err, collection) ->
+	DB.collection("levels").then (collection)->
 		collection.find().toArray (err, items) -> #{"userid":userid}
 			console.log "Found " + items.length + " level(s) for user " + userid
 			res.send items
 			return
-
 		return
-
 	return
 
 exports.findAll = (req, res) ->
-	db.collection "levels", (err, collection) ->
+	DB.collection("levels").then (collection) ->
 		collection.find().toArray (err, items) ->
 			res.send items
 			return
-
 		return
-
 	return
 
 exports.findById = (req, res) ->
 	id = req.params.id
 	console.log "Retrieving level: " + id
-	db.collection "levels", (err, collection) ->
+	DB.collection("levels").then (collection)->
 		collection.findOne
 			_id: new BSON.ObjectID(id)
 		, (err, item) ->
 			res.send item
 			return
-
 		return
-
 	return
 
 exports.addLevel = (req, res) ->
 	level = req.body
 	console.log "Adding level..."
-	db.collection "levels", (err, collection) ->
+	DB.collection("levels").then (collection)->
 		collection.insert level,
 			safe: true
 		, (err, result) ->
@@ -82,9 +63,7 @@ exports.addLevel = (req, res) ->
 				console.log "Success: " + JSON.stringify(result[0])
 				res.send result[0]
 			return
-
 		return
-
 	return
 
 exports.updateLevel = (req, res) ->
@@ -92,7 +71,7 @@ exports.updateLevel = (req, res) ->
 	level = req.body
 	console.log "Updating level: " + id
 	console.log JSON.stringify(level)
-	db.collection "levels", (err, collection) ->
+	DB.collection("levels").then (collection)->
 		collection.update
 			_id: new BSON.ObjectID(id)
 		, level,
@@ -113,7 +92,7 @@ exports.updateLevel = (req, res) ->
 exports.deleteLevel = (req, res) ->
 	id = req.params.id
 	console.log "Deleting level: " + id
-	db.collection "levels", (err, collection) ->
+	DB.collection("levels").then (collection)->
 		collection.remove
 			_id: new BSON.ObjectID(id)
 		,
@@ -3197,7 +3176,7 @@ populateDB = ->
 			}
 		]]
 	]
-	db.collection "levels", (err, collection) ->
+	DB.collection("levels").then (collection) ->
 		collection.insert levels,
 			safe: true
 		, (err, result) ->

@@ -1,5 +1,6 @@
 ### DEPENDENCIES ###
 Promise = require 'bluebird'
+Promise.longStackTraces()
 flash 		= require 'connect-flash'	# flash
 express		= require 'express' # express
 MongoStore	= require('connect-mongo')(express) # mongo auth store
