@@ -8,9 +8,8 @@ gulp.task 'default', ['lint']
 gulp.task 'lint', ->
 	gulp
 	.src([
-		'./DB/**/*.coffee'
-		'./routes/**/*.coffee'
-		'./app.coffee'
+		'./**/*.coffee'
+		'!./node_modules/**'
 	])
 	.pipe(coffeelint())
 	.pipe(coffeelint.reporter())
