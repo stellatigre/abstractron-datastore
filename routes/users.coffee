@@ -1,11 +1,14 @@
+DB = require './DB'
+Promise = require 'bluebird'
+
 mongo = require("mongodb")
 BSON = mongo.BSONPure
-DB = require './DB'
 
 DB.collection('users')
 .catch(->
 	console.log "Users collection does not exist, creating from sample data."
 	populateDB()
+	Promise.resolve()
 )
 .done(->
 	console.log "users: Connection opened."
