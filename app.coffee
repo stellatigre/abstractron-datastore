@@ -33,21 +33,6 @@ server = new Server 'localhost', 27017, auto_reconnect: true
 db = new Db 'abstractapi', server, safe: false
 
 
-# User methods
-findUserById = (id) ->
-	db.open (err, db)->
-		if err
-			fn new Error 'Err: ' + err
-		else
-			# local
-			db.collection 'users', (err, collection)->
-				collection.findOne _id: new BSON.ObjectID(id), (err, item)->
-					fn null, item
-				return
-		return
-
-	fn new Error 'User ' + id + ' does not exist'
-
 findSessionUserById = (id, fn) ->
 	db.open (err, db) ->
 		if err
