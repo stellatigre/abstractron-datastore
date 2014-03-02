@@ -40,20 +40,22 @@ openDatabase = new Promise (resolve, reject)->
 
 openDatabase
 .done (db)->
-
-	findSessionUserById = (id, fn) ->
-		# facebook
-		db.collection "sessions", (err, collection) ->
-			collection.findOne _id: new BSON.ObjectID(id), (err, item) ->
-				fn null, item
-			return
-
-	findUserByUsername = (username, fn) ->
-		db.collection "users", (err, collection) ->
-			collection.findOne username: username, (err, item) ->
-				console.log "FindByUsername: " + item
-				fn null, item
-			return
+	findOne = (collectionName, attributes)->
+		new Promise (resolve, reject)->
+			db.collection collectionName, (err, collection)->
+				reject new Error 'Could not select collection: '+collectionName
+				collection.findOne attributes, (err, item)->
+					if err
+						reject err
+					else
+						resolve item
+	findSessionUserById = (id)->
+		findOne 'sessions', _id: new BSON.ObjectID id
+	findUserByUsername = (username)->
+		findOne('users', username: username)
+		.then (item)->
+			console.log "FindByUsername: " + item
+			Promise.resolve item
 
 	# PASSPORT - LOCAL STRATEGY 
 	passport.use new LocalStrategy (username, password, done) ->
@@ -63,14 +65,15 @@ openDatabase
 			# Find user by username. If none found, or password
 			# is incorrect, set user to false to indicate failure and
 			# send flash message. Otherwise, return to authed 'user'.
-			findUserByUsername username, (err, user) ->
-				if err
-					return done err
+			findUserByUsername(username)
+			.fail((err)->done err)
+			.done((user)->
 				if !user
 					return done null, false, message: "Invalid user"
 				if user.password != password
 					return done null, false, message: "Invalid password"
 				done null, user
+			)
 			return
 		return
 
@@ -93,10 +96,12 @@ openDatabase
 
 	passport.deserializeUser (id, done) ->
 		console.log "SESSION: Deserialize user (" + id + ")"
-		findSessionUserById id, (err, obj) ->
+		findSessionUserById(id)
+		.fail((err)->done err)
+		.done((obj)->
 			console.log "findSessionUserById (" + id + ": found: " + obj
-			done err, obj
-			return
+			done null, obj
+		)
 		return
 
 		
