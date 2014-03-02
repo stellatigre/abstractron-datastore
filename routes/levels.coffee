@@ -13,7 +13,7 @@ Promise.all([
 	populateDB()
 	Promise.resolve()
 )
-.then ->
+.done ->
 	console.log "levels: Connection opened (users, levels)."
 
 
@@ -22,7 +22,7 @@ Promise.all([
 exports.findByUserId = (req, res) ->
 	userid = req.params.userid
 	console.log "Retrieving levels for user: " + userid
-	DB.collection("levels").then (collection)->
+	DB.collection("levels").done (collection)->
 		collection.find().toArray (err, items) -> #{"userid":userid}
 			console.log "Found " + items.length + " level(s) for user " + userid
 			res.send items
@@ -31,7 +31,7 @@ exports.findByUserId = (req, res) ->
 	return
 
 exports.findAll = (req, res) ->
-	DB.collection("levels").then (collection) ->
+	DB.collection("levels").done (collection) ->
 		collection.find().toArray (err, items) ->
 			res.send items
 			return
@@ -41,7 +41,7 @@ exports.findAll = (req, res) ->
 exports.findById = (req, res) ->
 	id = req.params.id
 	console.log "Retrieving level: " + id
-	DB.collection("levels").then (collection)->
+	DB.collection("levels").done (collection)->
 		collection.findOne
 			_id: new BSON.ObjectID(id)
 		, (err, item) ->
@@ -53,7 +53,7 @@ exports.findById = (req, res) ->
 exports.addLevel = (req, res) ->
 	level = req.body
 	console.log "Adding level..."
-	DB.collection("levels").then (collection)->
+	DB.collection("levels").done (collection)->
 		collection.insert level,
 			safe: true
 		, (err, result) ->
@@ -71,7 +71,7 @@ exports.updateLevel = (req, res) ->
 	level = req.body
 	console.log "Updating level: " + id
 	console.log JSON.stringify(level)
-	DB.collection("levels").then (collection)->
+	DB.collection("levels").done (collection)->
 		collection.update
 			_id: new BSON.ObjectID(id)
 		, level,
@@ -92,7 +92,7 @@ exports.updateLevel = (req, res) ->
 exports.deleteLevel = (req, res) ->
 	id = req.params.id
 	console.log "Deleting level: " + id
-	DB.collection("levels").then (collection)->
+	DB.collection("levels").done (collection)->
 		collection.remove
 			_id: new BSON.ObjectID(id)
 		,
@@ -3176,7 +3176,7 @@ populateDB = ->
 			}
 		]]
 	]
-	DB.collection("levels").then (collection) ->
+	DB.collection("levels").done (collection) ->
 		collection.insert levels,
 			safe: true
 		, (err, result) ->
