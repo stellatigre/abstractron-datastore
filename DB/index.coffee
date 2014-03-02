@@ -26,6 +26,4 @@ class DB
 					else
 						resolve data
 
-
-
 module.exports = new DB
