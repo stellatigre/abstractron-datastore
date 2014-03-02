@@ -1,4 +1,5 @@
 ### DEPENDENCIES ###
+Promise = require 'bluebird'
 flash 		= require 'connect-flash'	# flash
 express		= require 'express' # express
 mongo		= require 'mongodb'
@@ -24,15 +25,16 @@ blocks = require './routes/blocks'
 login	= require './routes/login'
 register = require './routes/register'
 
+Server = mongo.Server
+Db = mongo.Db
+BSON = mongo.BSONPure
+
+server = new Server 'localhost', 27017, auto_reconnect: true
+db = new Db 'abstractapi', server, safe: false
+
+
 # User methods
-findUserById = (id, fn) ->
-	Server = mongo.Server
-	Db = mongo.Db
-	BSON = mongo.BSONPure
-
-	server = new Server 'localhost', 27017, auto_reconnect: true
-	db = new Db 'abstractapi', server, safe: false
-
+findUserById = (id) ->
 	db.open (err, db)->
 		if err
 			fn new Error 'Err: ' + err
@@ -45,14 +47,8 @@ findUserById = (id, fn) ->
 		return
 
 	fn new Error 'User ' + id + ' does not exist'
-	return
 
 findSessionUserById = (id, fn) ->
-	Server = mongo.Server
-	Db = mongo.Db
-	BSON = mongo.BSONPure
-	server = new Server "localhost", 27017, auto_reconnect: true
-	db = new Db "abstractapi", server, safe: false
 	db.open (err, db) ->
 		if err
 			fn new Error "Err: " + err
@@ -69,15 +65,6 @@ findSessionUserById = (id, fn) ->
 	return
 
 findUserByUsername = (username, fn) ->
-	Server = mongo.Server
-	Db = mongo.Db
-	BSON = mongo.BSONPure
-	server = new Server("localhost", 27017,
-		auto_reconnect: true
-	)
-	db = new Db("abstractapi", server,
-		safe: false
-	)
 	db.open (err, db) ->
 		if err
 			fn new Error("Err: " + err)
