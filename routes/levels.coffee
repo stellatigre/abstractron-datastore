@@ -4,10 +4,10 @@ BSON = mongo.BSONPure
 
 DB = require '../DB'
 
-Promise.all([
-	DB.collection('users')
-	DB.collection('levels')
-])
+# Promise.all([
+# 	DB.collection('users')
+# ])
+DB.collection('levels', strict: true)
 .catch(->
 	console.log "Levels collection does not exist, creating from sample data."
 	populateDB()

@@ -17,11 +17,10 @@ class DB
 
 	open: -> @openPromise
 
-	collection: (collectionName)->
-		new Promise (resolve, reject)=>
-			@open()
-			.then (db)->
-				db.collection "users", {strict: true}, (err, data)->
+	collection: (collectionName, options={})=>
+		@open().then (db)->
+			new Promise (resolve, reject)=>
+				db.collection collectionName, options, (err, data)->
 					if err
 						reject err
 					else

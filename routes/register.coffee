@@ -1,6 +1,6 @@
 DB = require '../DB'
 
-DB.collection('users')
+DB.collection('users', strict: true)
 .catch(->
 )
 .done(->

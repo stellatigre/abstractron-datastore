@@ -1,10 +1,10 @@
-DB = require './DB'
+DB = require '../DB'
 Promise = require 'bluebird'
 
 mongo = require("mongodb")
 BSON = mongo.BSONPure
 
-DB.collection('videos')
+DB.collection('videos', strict: true)
 .catch(->
 	console.log "Videos collection does not exist, creating from sample data."
 	populateDB()
