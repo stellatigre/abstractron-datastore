@@ -30,17 +30,17 @@ DB = require './DB'
 DB.open()
 .done (db)->
 	findOne = (collectionName, attributes)->
-			DB.collection(collectionName)
-			.catch(->
-				throw new Error 'Could not select collection: '+collectionName
-			)
-			.then((collection)->
-				collection.findOne attributes, (err, item)->
-					if err
-						Promise.reject err
-					else
-						Promise.resolve item
-			)
+		DB.collection(collectionName)
+		.catch(->
+			throw new Error 'Could not select collection: '+collectionName
+		)
+		.then((collection)->
+			collection.findOne attributes, (err, item)->
+				if err
+					Promise.reject err
+				else
+					Promise.resolve item
+		)
 	findSessionUserById = (id)->
 		findOne 'sessions', _id: new BSON.ObjectID id
 	findUserByUsername = (username)->
@@ -49,11 +49,11 @@ DB.open()
 			console.log "FindByUsername: " + item
 			Promise.resolve item
 
-	# PASSPORT - LOCAL STRATEGY 
+	# PASSPORT - LOCAL STRATEGY
 	passport.use new LocalStrategy (username, password, done) ->
 		console.log "LOGIN CHECK: user " + username + " pass " + password
 		process.nextTick ->
-			
+
 			# Find user by username. If none found, or password
 			# is incorrect, set user to false to indicate failure and
 			# send flash message. Otherwise, return to authed 'user'.
@@ -70,7 +70,7 @@ DB.open()
 		return
 
 
-	### PASSPORT - FACEBOOK 
+	### PASSPORT - FACEBOOK
 	passport.use new FacebookStrategy
 		clientID: FACEBOOK_APP_ID
 		clientSecret: FACEBOOK_APP_SECRET
@@ -96,7 +96,7 @@ DB.open()
 		)
 		return
 
-		
+
 	### SERVER CONFIG ###
 	app.configure ->
 		app.use express.logger()
@@ -113,7 +113,7 @@ DB.open()
 				console.log "MongoStore session db connection OK."
 				return
 		app.use flash()
-		
+
 		# Initialize passport and use sessions
 		app.use passport.initialize()
 		app.use passport.session()
@@ -142,7 +142,7 @@ DB.open()
 		res.redirect "/"
 		return
 
-	### ENSURE AUTH 
+	### ENSURE AUTH
 		Use this route on any protected resource, will be allowed
 		if authenticated otherwise redirect to login.
 	###
@@ -160,7 +160,7 @@ DB.open()
 		function(req, res) {
 			// Request will redirect to FB for auth, this will not be hit
 		}
-		
+
 	app.get('/auth/facebook/callback',
 		passport.authenticate('facebook', { failureRedirect: '/login' }),
 		function (req, res) {

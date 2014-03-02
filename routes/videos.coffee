@@ -22,15 +22,15 @@ validateVideoData = (video, res, callback) ->
 			res.statusCode = 400
 			res.send error: "URL value appears to not be valid."
 			validated = false
-		else if video["name"] is (`undefined` or "")
+		else if !video.name
 			res.statusCode = 400
 			res.send error: "Video lacks a name, please add one"
 			validated = false
 		else
 			validated = true
 		if validated
-			callback video, res #console.log('validated callback success');
-		else #console.log ('callback being called with no arguments');
+			callback video, res #console.log('validated callback success')
+		else #console.log ('callback being called with no arguments')
 			callback()
 	return
 
@@ -122,7 +122,7 @@ exports.deleteVideo = (req, res) ->
 	return
 
 
-# SAMPLE DATA 
+# SAMPLE DATA
 populateDB = ->
 	videos = [
 		{

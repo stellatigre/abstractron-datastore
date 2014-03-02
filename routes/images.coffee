@@ -44,15 +44,15 @@ validateImageData = (image, res, callback) ->
 			res.statusCode = 400
 			res.send error: "URL value appears to not be valid."
 			validated = false
-		else if image["name"] is (`undefined` or "")
+		else if !image.name
 			res.statusCode = 400
 			res.send error: "Image lacks a name, please add one"
 			validated = false
 		else
 			validated = true
 		if validated
-			callback image, res #console.log('validated callback success');
-		else #console.log ('callback being called with no arguments');
+			callback image, res #console.log('validated callback success')
+		else #console.log ('callback being called with no arguments')
 			callback()
 	return
 
@@ -116,7 +116,7 @@ exports.deleteImage = (req, res) ->
 	return
 
 
-# SAMPLE DATA 
+# SAMPLE DATA
 populateDB = ->
 	images = require("./sample_data/images.json")
 	DB.collection('images').done (collection)->

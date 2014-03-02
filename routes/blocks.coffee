@@ -23,7 +23,7 @@ validateBlockData = (block, res, callback) ->
 			res.statusCode = 400
 			res.send error: "URL value appears to not be valid."
 			validated = false
-		else if block["name"] is (`undefined` or "")
+		else if !block.name
 			res.statusCode = 400
 			res.send error: "Block lacks a name, please add one"
 			validated = false
@@ -128,7 +128,7 @@ exports.deleteBlock = (req, res) ->
 	return
 
 
-# SAMPLE DATA 
+# SAMPLE DATA
 populateDB = ->
 	blocks = require("./sample_data/blocks.json")
 	DB.collection('blocks').done (collection)->

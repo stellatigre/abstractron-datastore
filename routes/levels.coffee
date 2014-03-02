@@ -110,7 +110,7 @@ exports.deleteLevel = (req, res) ->
 	return
 
 
-# SAMPLE DATA 
+# SAMPLE DATA
 populateDB = ->
 	levels = [
 		name: "TestLevel"

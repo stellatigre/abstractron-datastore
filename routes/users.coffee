@@ -59,7 +59,7 @@ exports.addUser = (req, res) ->
 	user = req.body
 	console.log "Adding user: " + JSON.stringify(user)
 	DB.collection('users').done (collection)->
-		
+
 		# Fail on existing username
 		collection.findOne
 			username: user.username
@@ -67,7 +67,7 @@ exports.addUser = (req, res) ->
 			res.end "Username is taken."
 			return
 
-		
+
 		# Fail on existing email
 		collection.findOne
 			email: user.email
@@ -82,7 +82,7 @@ exports.addUser = (req, res) ->
 				res.send error: "An error occurred on user insert."
 			else
 				console.log "Success: " + JSON.stringify(result[0])
-				
+
 				# We only want to return the user id generated.
 				res.json _id: result[0]._id
 			return
@@ -129,7 +129,7 @@ exports.deleteUser = (req, res) ->
 	return
 
 
-# SAMPLE DATA 
+# SAMPLE DATA
 populateDB = ->
 	users = require("./sample_data/users.json")
 	DB.collection('users').done (collection)->
