@@ -4,16 +4,7 @@ var flash 		= require('connect-flash'),	// flash
 	mongo		= require('mongodb'),
 	MongoStore  = require('connect-mongo')(express), // mongo auth store
 	passport	= require('passport'),	// passport
-	LocalStrategy = require('passport-local').Strategy,
-	// LocalStrategy: basic auth
-	
-	/* Knocking this out until we use it
-	FacebookStrategy = require('passport-facebook').Strategy,
-	// App ID/Secret
-	FACEBOOK_APP_ID = "1436345559910277",
-	FACEBOOK_APP_SECRET = "54b38ae41d350af4e506b1218feb17ee",
-	*/
-	
+	LocalStrategy = require('passport-local').Strategy, // LocalStrategy: basic auth
 	app      	= express(),	
 	
 	// route modules
