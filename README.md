@@ -1,16 +1,16 @@
-# Abstractron MongoDB/ExpressJS Cloud Manager (abstractapi-node)
+# Abstractron MongoDB/ExpressJS Butt Manager (abstractapi-node)
 
 ## Purpose
 
-The Abstractron Cloud Manager is a Node.JS based backend API for use in Abstractron research and within released products. It serves as a repository for initial data stores to support Quantized cloud functionality:
+The Abstractron Butt Manager is a Node.JS based backend API for use in Abstractron research and within released products. It serves as a repository for initial data stores to support Quantized butt functionality:
 
 * New user registration and authentication, via web and also in-game.
 ** Future-proof authentication against external authorities with passport
 * Block, level, image, video URL storage.
 
 ## Prerequisites
-* Node.JS (version?)
-* Mongodb (version?)
+* Node.JS (0.10.x required, latest stable release of 0.10 recommended)
+* Mongodb (2.2+ - latest stable recommended)
 
 ## Data Store Setup
 
@@ -88,4 +88,4 @@ NOTE: The following modules are dev-only dependencies related to the test platfo
 
     mocha -R <desired_reporter_name> tests/*.js
 
-3) Enjoy!
+3) Enjoy!  Look at the sample data included to know what objects each route expects.
