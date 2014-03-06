@@ -1,12 +1,12 @@
-# Abstractron MongoDB/ExpressJS Cloud Manager (abstractapi-node)
+# Abstractron Datastore (MongoDB /ExpressJS)
 
 ## Purpose
 
-The Abstractron cloud Manager is a Node.JS based backend API for use in Abstractron research and within released products. It serves as a repository for initial data stores to support Quantized cloud functionality:
+The Abstractron Datastore is a Node.JS based backend API for use in Abstractron research and within released products. It serves as a repository for initial data stores to support Quantized cloud functionality:
 
 * New user registration and authentication, via web and also in-game.
 ** Future-proof authentication against external authorities with passport
-* Block, level, image, video URL storage.
+* Block, level, image, video URL+metadata storage.
 
 ## Prerequisites
 * Node.JS (0.10.x required, latest stable release of 0.10 recommended)
@@ -22,11 +22,6 @@ The Abstractron cloud Manager is a Node.JS based backend API for use in Abstract
     
 3) Open a new console once mongod is finished booting, and type 'mongo' to access the command line mongodb client. Type 'use abstractapi' to create a new database entry for the API data store. The database is not permanently created until the application first runs and inserts test data into the collection.
 
-    MongoDB shell version: n.n.n
-    connecting to: test
-    Welcome to the MongoDB shell.
-    ...
-    ...
     > use abstractapi
     switched to db abstractapi
     > show databases
@@ -86,6 +81,6 @@ NOTE: The following modules are dev-only dependencies related to the test platfo
     
 2) ...or mocha directly.
 
-    mocha -R <desired_reporter_name> tests/*.js
+    mocha -R <desired_reporter_name> tests/
 
 3) Enjoy!  Look at the sample data included to know what objects each route expects.

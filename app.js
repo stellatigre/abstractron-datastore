@@ -5,15 +5,7 @@ var flash 		= require('connect-flash'),	// flash
 	MongoStore  = require('connect-mongo')(express), // mongo auth store
 	passport	= require('passport'),	// passport
 	LocalStrategy = require('passport-local').Strategy,
-	// LocalStrategy: basic auth
-	
-	/* Knocking this out until we use it
-	FacebookStrategy = require('passport-facebook').Strategy,
-	// App ID/Secret
-	FACEBOOK_APP_ID = "1436345559910277",
-	FACEBOOK_APP_SECRET = "54b38ae41d350af4e506b1218feb17ee",
-	*/
-	
+	FacebookStrategy = require('passport-facebook').Strategy,	
 	app      	= express(),	
 	
 	// route modules
@@ -69,7 +61,6 @@ function findSessionUserById(id, fn) {
 			});
 		}
 	});	
-
 	fn(new Error('User ' + id + ' does not exist'));
 }
 
@@ -122,27 +113,21 @@ passport.use(new LocalStrategy(
 	}
 ));
 
-/* PASSPORT - FACEBOOK 
+PASSPORT - FACEBOOK 
 passport.use(new FacebookStrategy({
-	clientID: FACEBOOK_APP_ID,
-	clientSecret: FACEBOOK_APP_SECRET,
+	clientID: conf.FB_AppID,
+	clientSecret: conf.FB_AppSecret,
 	callbackURL: "http://devnode.vmception.com:3002/auth/facebook/callback"
 	},
 	function(accessToken, refreshToken, profile, done) {
-		console.log(profile);
-		
-		
+		console.log(profile);		
 		return done(null, profile);
 	}
 ));
-*/
 
 /* PASSPORT USER SERIALIZATION */
 passport.serializeUser(function(user, done) {
 	console.log("SESSION: Serialize user...");
-	
-	
-
 	done(null, user);
 });
 
@@ -151,7 +136,6 @@ passport.deserializeUser(function(id, done) {
 	
 	findSessionUserById(id, function(err, obj) {
 		console.log('findSessionUserById (' + id + ': found: ' + obj);
-		
 		done(err, obj);
 	});
 });
@@ -164,7 +148,7 @@ app.configure(function () {
 	app.use(express.methodOverride());
 	app.use(express.compress());
 	app.use(express.session({ 
-		secret: 'abstractsecret', 
+		secret: conf.express_SessionSecret, 
 		store: new  MongoStore({
 			db: 'abstractapi',
 			collection: 'sessions',

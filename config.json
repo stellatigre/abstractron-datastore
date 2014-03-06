@@ -1,0 +1,18 @@
+{ 
+	"FB":
+		{
+			"AppId" : "1536375599934567",
+			"AppSecret" : "65c49ae41d460bg4e506b1218feb17g",
+		},
+
+	"api":
+		{
+			"secret" : "abstractsecretstring"
+		},
+
+	"mongo":
+		{
+			"user" : "abstractbot",
+			"pass" : "userpassword"
+		}	
+}
