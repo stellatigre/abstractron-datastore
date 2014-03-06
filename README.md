@@ -73,18 +73,19 @@ NOTE: The following modules are dev-only dependencies related to the test platfo
     async
     request
     
-3) Modify tests/lib/testConfig.json to point to your development API instance:
+Modify tests/lib/testConfig.json to point to your development API instance:
 
     {
         "baseUrl" : "http://yourhost:3002"
     }
 
-1) Run tests from the root directory via npm...
+Run tests from the root directory via npm...
 
     npm test
     
-2) ...or mocha directly.
+...or mocha directly.
 
     mocha -R <desired_reporter_name> tests/
 
-3) Enjoy!  Look at the sample data included to know what objects each route expects.
+
+Enjoy!  Look at the sample data included to know what objects each route expects.
