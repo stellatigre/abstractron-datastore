@@ -150,7 +150,7 @@ app.configure(function () {
 	app.use(express.methodOverride());
 	app.use(express.compress());
 	app.use(express.session({ 
-		secret: conf.express_SessionSecret, 
+		secret: conf.api.secret, 
 		store: new  MongoStore({
 			db: 'abstractapi',
 			collection: 'sessions',
