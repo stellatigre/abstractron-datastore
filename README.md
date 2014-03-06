@@ -32,7 +32,7 @@ The Abstractron Datastore is a Node.JS based backend API for use in Abstractron 
 
 1) Clone this repo locally.
 
-    git clone https://github.com/abstractron/abstractapi-node.git .
+    git clone https://github.com/stellacannefax/abstractron-datastore.git 
     
 2) Perform an npm install using --dev switch to also retrieve test-related modules. Failure to use the --dev switch will prevent test-related modules from being installed (see below).
 
@@ -40,7 +40,7 @@ The Abstractron Datastore is a Node.JS based backend API for use in Abstractron 
     
 3) Start the application via node or forever
 
-    node app *OR* forever app.js
+    node app.js  (if 'forever' is installed: forever app.js, or npm start)
     
     API: INIT [OK]
     users: Connection opened.
