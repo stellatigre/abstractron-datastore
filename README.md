@@ -62,9 +62,13 @@ The Abstractron Datastore is a Node.JS based backend API for use in Abstractron 
     
 ## Testing with Mocha
 
-NOTE: The following modules are dev-only dependencies related to the test platform, which will not be installed unless the --dev flag is used on npm install.
+This currently requires a global install of Mocha - http://visionmedia.github.io/mocha/
 
-    mocha
+	sudo npm install -g mocha
+
+
+NOTE: The following modules are dev-only dependencies related to the test platform, which will not be installed unless the --dev flag is used on npm install.
+	
     chai
     async
     request
