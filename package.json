@@ -1,7 +1,7 @@
 {
   "name": "abstractapi",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.3.0",
+  "private": false,
   "scripts": {
     "start": "forever app.js",
 	"test" : "mocha -R spec tests/"
@@ -11,10 +11,8 @@
     "connect-flash": "~0.1.1",
     "mongodb": "~1.3.19",
     "connect-mongo": "~0.4.0",
-    "mongoose": "~3.8.1",
     "passport": "~0.1.17",
     "passport-local": "~0.1.6",
-    "passport-facebook": "~1.0.2",
     "lodash": "~2.4.1"
   },
   "devDependencies": {

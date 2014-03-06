@@ -10,11 +10,8 @@ db = new Db('abstractapi', server, {safe: true});
 db.open(function (err, db) {
 	if (!err) {
 		db.collection('users', { strict: true }, function (err, collection) {
-			if (err) {
-			
-			}
+			if (err) {};
 		});
-		console.log('login: Connection opened (users).');
 	}
 });
 

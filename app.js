@@ -6,6 +6,7 @@ var flash 		= require('connect-flash'),	// flash
 	passport	= require('passport'),	// passport
 	LocalStrategy = require('passport-local').Strategy,
 	FacebookStrategy = require('passport-facebook').Strategy,	
+	LocalStrategy = require('passport-local').Strategy, // LocalStrategy: basic auth
 	app      	= express(),	
 	
 	// route modules
@@ -117,7 +118,7 @@ PASSPORT - FACEBOOK
 passport.use(new FacebookStrategy({
 	clientID: conf.FB_AppID,
 	clientSecret: conf.FB_AppSecret,
-	callbackURL: "http://devnode.vmception.com:3002/auth/facebook/callback"
+	callbackURL: "http://localhost:3002/auth/facebook/callback"
 	},
 	function(accessToken, refreshToken, profile, done) {
 		console.log(profile);		
@@ -200,7 +201,7 @@ function ensureAuthenticated(req, res, next) {
 
 // /auth
 
-/* facebook
+// facebook
 app.get('/auth/facebook',
 	passport.authenticate('facebook'),
 	function(req, res) {
@@ -212,7 +213,7 @@ app.get('/auth/facebook/callback',
 	function (req, res) {
 		res.send('Logged in');
 	});
-*/
+
 
 app.post('/authfail', login.loginFailed);
 app.post('/authok', login.loggedIn);
