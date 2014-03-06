@@ -7,6 +7,7 @@ var flash 		= require('connect-flash'),	// flash
 	LocalStrategy = require('passport-local').Strategy,
 	FacebookStrategy = require('passport-facebook').Strategy,	
 	LocalStrategy = require('passport-local').Strategy, // LocalStrategy: basic auth
+	conf = require('./config.json');
 	app      	= express(),	
 	
 	// route modules
@@ -54,7 +55,6 @@ function findSessionUserById(id, fn) {
 		if (err) {
 			fn(new Error('Err: ' + err));
 		} else {
-			// facebook
 			db.collection('sessions', function (err, collection) {
 				collection.findOne({_id: new BSON.ObjectID(id) }, function (err, item) {
 					return fn(null, item);
@@ -113,11 +113,11 @@ passport.use(new LocalStrategy(
 		});
 	}
 ));
-
-PASSPORT - FACEBOOK 
+/*
+//PASSPORT - FACEBOOK 
 passport.use(new FacebookStrategy({
-	clientID: conf.FB_AppID,
-	clientSecret: conf.FB_AppSecret,
+	clientID: conf.FB.AppID,
+	clientSecret: conf.FB.AppSecret,
 	callbackURL: "http://localhost:3002/auth/facebook/callback"
 	},
 	function(accessToken, refreshToken, profile, done) {
@@ -126,7 +126,7 @@ passport.use(new FacebookStrategy({
 	}
 ));
 
-/* PASSPORT USER SERIALIZATION */
+// PASSPORT USER SERIALIZATION //
 passport.serializeUser(function(user, done) {
 	console.log("SESSION: Serialize user...");
 	done(null, user);
@@ -140,8 +140,9 @@ passport.deserializeUser(function(id, done) {
 		done(err, obj);
 	});
 });
+*/
 	
-/* SERVER CONFIG */
+// SERVER CONFIG //
 app.configure(function () {
 	app.use(express.logger());
 	app.use(express.cookieParser('abstractsecret'));
@@ -204,16 +205,14 @@ function ensureAuthenticated(req, res, next) {
 // facebook
 app.get('/auth/facebook',
 	passport.authenticate('facebook'),
-	function(req, res) {
-		// Request will redirect to FB for auth, this will not be hit
-	});
+	function(req, res) {});	// Request will redirect to FB for auth, this will not be hit
+
 	
 app.get('/auth/facebook/callback',
 	passport.authenticate('facebook', { failureRedirect: '/login' }),
 	function (req, res) {
-		res.send('Logged in');
+		res.send('Logged in');	
 	});
-
 
 app.post('/authfail', login.loginFailed);
 app.post('/authok', login.loggedIn);
