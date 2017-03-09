@@ -62,7 +62,7 @@ The Abstractron Datastore is a Node.JS based backend API for use in Abstractron 
     
 ## Testing with Mocha
 
-This currently requires a global install of Mocha - http://visionmedia.github.io/mocha/
+This currently requires a global install of Mocha - http://mochajs.org/
 
 	sudo npm install -g mocha
 
